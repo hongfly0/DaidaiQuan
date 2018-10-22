@@ -21,7 +21,7 @@ define('APP_PATH', CMF_ROOT . 'app/');
 // 定义CMF核心包目录
 define('CMF_PATH', CMF_ROOT . 'simplewind/cmf/');
 
-// 定义插件目录
+// 定义插件目录la
 define('PLUGINS_PATH', __DIR__ . '/plugins/');
 
 // 定义扩展目录

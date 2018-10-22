@@ -231,4 +231,34 @@ hello;
         }
     }
 
+    /**
+     * 返回成功
+     * author Fox
+     */
+    public function apisucces($msg='',$result=array()){
+        $return = array();
+        $msg = empty($msg)?'success':$msg;
+
+        $return['code'] = '1';
+        $return['msg']  = $msg;
+        $return['data'] = $result;
+
+        echo json_encode($return);
+    }
+
+    /**
+     * 返回失败
+     * author Fox
+     */
+    public function apifailed($msg='',$result=array()){
+        $return = array();
+        $msg = empty($msg)?'failed':$msg;
+
+        $return['code'] = '-1';
+        $return['msg']  = $msg;
+        $return['data'] = $result;
+
+        echo json_encode($return);
+    }
+
 }
