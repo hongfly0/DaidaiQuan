@@ -7,7 +7,9 @@ header('Access-Control-Allow-Methods:*');
 // 响应头设置
 header('Access-Control-Allow-Headers:x-requested-with,content-type');
 
+use app\portal\model\CollectListModel;
 use app\portal\model\ProductQueryModel;
+use app\portal\model\ViewListModel;
 use cmf\controller\HomeBaseController;
 use app\portal\model\ProductModel;
 use think\Db;
@@ -86,4 +88,91 @@ class ProductController extends HomeBaseController
 
         return $this->apisucces('产品详情',$result);
     }
+
+    /**
+     * 代办机构列表
+     */
+    public function agentList(){
+        $product_id = $_REQUEST['product_id'];
+
+        $result = Db::table('ddq_agent')->alias('a')
+            ->join('ddq_agent_product ap','ap.agent_id=a.agent_id')
+            ->where('ap.product_id','=',$product_id)
+            ->where('a.agent_status','=',1)
+            ->field('a.agent_id,a.agent_avatar,a.agent_name,a.agent_company,a.agent_company_address,a.agent_position,a.agent_company_owner,a.agent_company_phone,a.agent_mobile,a.agent_business_scope,a.agent_zode,a.agent_status')
+            ->select()->toArray();
+
+        $this->apisucces('代办人列表',$result);
+    }
+
+    /**
+     * 产品查看
+     */
+    public function view(){
+        $product_id = $_REQUEST['product_id'];
+        $member_id = $_REQUEST['member_id'];
+
+        Db::startTrans();
+
+        $result = ViewListModel::create(array(
+            'member_id' => $member_id,
+            'product_id' => $product_id,
+            'create_at'  => date('Y-m-d H:i:s')
+        ));
+
+        $result2 = Db::table('ddq_product')->where('product_id','=',$product_id)->setInc('view_num');
+
+        if($result && $result2){
+            Db::commit();
+            $this->apisucces('查看成功');
+        }else{
+            Db::rollback();
+            $this->apifailed('查看失败');
+        }
+    }
+
+    /**
+     * 收藏列表
+     */
+    public function collect(){
+        $product_id = $_REQUEST['product_id'];
+        $member_id = $_REQUEST['member_id'];
+        $status = $_REQUEST['status'];
+
+        if(empty($product_id) || empty($member_id) || empty($status)){
+            return $this->apifailed('缺少必要参数');
+        }
+
+        $info = CollectListModel::get(array('member_id'=>$member_id,'product_id'=>$product_id));
+
+        if($status == 1 && !empty($info)){
+                return  $this->apifailed('已经收藏了');
+        }elseif ($status==2 && empty($info)){
+            return  $this->apifailed('你还没有收藏');
+        }
+
+        Db::startTrans();
+
+        if($status==1){
+           $result = CollectListModel::create(array(
+               'member_id' => $member_id,
+               'product_id' => $product_id,
+               'create_at'  => date('Y-m-d H:i:s')
+           ));
+            $result2 = Db::table('ddq_product')->where('product_id','=',$product_id)->setInc('collect_num');
+        }elseif ($status == 2){
+            $result = CollectListModel::destroy(array('member_id'=>$member_id,'product_id'=>$product_id));
+
+            $result2 = Db::table('ddq_product')->where('product_id','=',$product_id)->setDec('collect_num');
+        }
+
+        if($result && $result2){
+            Db::commit();
+            return  $this->apisucces('成功');
+        }else{
+            Db::rollback();
+            return $this->apifailed('失败');
+        }
+    }
+
 }
