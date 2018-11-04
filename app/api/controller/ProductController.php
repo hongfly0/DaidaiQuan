@@ -132,7 +132,7 @@ class ProductController extends HomeBaseController
     }
 
     /**
-     * 收藏列表
+     * 收藏信息
      */
     public function collect(){
         $product_id = $_REQUEST['product_id'];
