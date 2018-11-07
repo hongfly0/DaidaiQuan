@@ -17,9 +17,12 @@ header('Access-Control-Allow-Methods:*');
 header('Access-Control-Allow-Headers:x-requested-with,content-type');
 
 
+use app\admin\model\SlideItemModel;
 use app\portal\model\ProductQueryModel;
 use cmf\controller\HomeBaseController;
 use app\portal\model\ProductModel;
+use Qiniu\Config;
+use think\Db;
 
 
 class ListController extends HomeBaseController
@@ -47,5 +50,24 @@ class ListController extends HomeBaseController
         }
 
         return $this->apisucces('Index api',$result);
+    }
+
+    /**
+     * 获取banner图片
+     */
+    public function banner(){
+        $slide_id = $_REQUEST['slide_id'];
+
+        $images = Db::table('ddq_slide_item')->where('status','=','1')
+                                             ->where('slide_id','=',$slide_id)
+                                             ->order('list_order','desc')
+                                             ->select()->toArray();
+
+        foreach ($images as &$value){
+            $value['image'] = config('IMG_URL_PREFIX').$value['image'];
+        }
+
+
+        return $this->apisucces('banner列表',$images);
     }
 }
