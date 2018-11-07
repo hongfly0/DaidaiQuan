@@ -372,6 +372,151 @@
         });
     }
 
+    //所有的重置操作操作，重置后数据后刷新页面
+    if ($('a.js-ajax-reset').length) {
+        Wind.css('artDialog');
+        Wind.use('artDialog', 'noty', function () {
+            $('.js-ajax-reset').on('click', function (e) {
+                e.preventDefault();
+                var $_this  = this,
+                    $this   = $($_this),
+                    href    = $this.data('href'),
+                    refresh = $this.data('refresh'),
+                    msg     = $this.data('msg');
+                href        = href ? href : $this.attr('href');
+
+                art.dialog({
+                    title: false,
+                    icon: 'question',
+                    content: msg ? msg : '确定要重置吗？',
+                    follow: $_this,
+                    close: function () {
+                        $_this.focus(); //关闭时让触发弹窗的元素获取焦点
+                        return true;
+                    },
+                    okVal: "确定",
+                    ok: function () {
+                        $.getJSON(href).done(function (data) {
+                            if (data.code == '1') {
+                                noty({
+                                    text: data.msg,
+                                    type: 'success',
+                                    layout: 'topCenter',
+                                    modal: true,
+                                    // animation: {
+                                    //     open: 'animated bounceInDown', // Animate.css class names
+                                    //     close: 'animated bounceOutUp', // Animate.css class names
+                                    // },
+                                    timeout: 800,
+                                    callback: {
+                                        afterClose: function () {
+                                            if (refresh == undefined || refresh) {
+                                                if (data.url) {
+                                                    //返回带跳转地址
+                                                    window.location.href = data.url;
+                                                } else {
+                                                    //刷新当前页
+                                                    reloadPage(window);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }).show();
+
+                            } else if (data.code == '0') {
+                                //art.dialog.alert(data.info);
+                                //alert(data.info);//暂时处理方案
+                                art.dialog({
+                                    content: data.msg,
+                                    icon: 'warning',
+                                    ok: function () {
+                                        this.title(data.msg);
+                                        return true;
+                                    }
+                                });
+                            }
+                        });
+                    },
+                    cancelVal: '关闭',
+                    cancel: true
+                });
+            });
+
+        });
+    }
+
+    //所有的暂停操作操作，暂停后数据后刷新页面
+    if ($('a.js-ajax-pause').length) {
+        Wind.css('artDialog');
+        Wind.use('artDialog', 'noty', function () {
+            $('.js-ajax-pause').on('click', function (e) {
+                e.preventDefault();
+                var $_this  = this,
+                    $this   = $($_this),
+                    href    = $this.data('href'),
+                    refresh = $this.data('refresh'),
+                    msg     = $this.data('msg');
+                href        = href ? href : $this.attr('href');
+
+                art.dialog({
+                    title: false,
+                    icon: 'question',
+                    content: msg ? msg : '确定要暂停吗？',
+                    follow: $_this,
+                    close: function () {
+                        $_this.focus(); //关闭时让触发弹窗的元素获取焦点
+                        return true;
+                    },
+                    okVal: "确定",
+                    ok: function () {
+                        $.getJSON(href).done(function (data) {
+                            if (data.code == '1') {
+                                noty({
+                                    text: data.msg,
+                                    type: 'success',
+                                    layout: 'topCenter',
+                                    modal: true,
+                                    // animation: {
+                                    //     open: 'animated bounceInDown', // Animate.css class names
+                                    //     close: 'animated bounceOutUp', // Animate.css class names
+                                    // },
+                                    timeout: 800,
+                                    callback: {
+                                        afterClose: function () {
+                                            if (refresh == undefined || refresh) {
+                                                if (data.url) {
+                                                    //返回带跳转地址
+                                                    window.location.href = data.url;
+                                                } else {
+                                                    //刷新当前页
+                                                    reloadPage(window);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }).show();
+
+                            } else if (data.code == '0') {
+                                //art.dialog.alert(data.info);
+                                //alert(data.info);//暂时处理方案
+                                art.dialog({
+                                    content: data.msg,
+                                    icon: 'warning',
+                                    ok: function () {
+                                        this.title(data.msg);
+                                        return true;
+                                    }
+                                });
+                            }
+                        });
+                    },
+                    cancelVal: '关闭',
+                    cancel: true
+                });
+            });
+
+        });
+    }
 
     if ($('a.js-ajax-dialog-btn').length) {
         Wind.use('artDialog', 'noty', function () {

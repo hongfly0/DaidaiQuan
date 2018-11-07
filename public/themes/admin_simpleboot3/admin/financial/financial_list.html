@@ -48,10 +48,10 @@
                     </if>
                 </td>
                 <td>
-                    <font color="#cccccc"><a href="">删除</a></font>
+                    <font color="#cccccc"><a class="js-ajax-delete" href="{:url('financial/delFinancial',array('id'=>$vo['ins_id']))}">{:lang('DELETE')}</a></font>
                     <font color="#cccccc"><a href="">暂停</a></font>
                     <font color="#cccccc"><a href="">编辑</a></font>
-                    <font color="#cccccc"><a href="{url:/}">密码重置</a></font>
+                    <font color="#cccccc"><a class="js-ajax-reset" href="{:url('financial/resetFinancialPassWord',array('id'=>$vo['ins_id']))}">密码重置</a></font>
                 </td>
             </tr>
         </foreach>
