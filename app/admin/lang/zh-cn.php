@@ -159,6 +159,20 @@ return [
     "EMAIL_ACTIVATION"                   => '邮箱激活',
     "EMAIL_SUBJECT"                      => '邮件标题',
     "EMAIL_TEMPLATE"                     => '邮件模版',
-    "EMAIL_TEMPLATE_HELP_TEXT"           => '请用{$link}代替激活链接，{$username}代替用户名'
+    "EMAIL_TEMPLATE_HELP_TEXT"           => '请用{$link}代替激活链接，{$username}代替用户名',
+
+    "ADD_AGENT_STORE"                       =>  '添加代办商家',
+    "THE_CONTACT"                           =>  '联系人',
+    "COMPANY_NAME"                          =>  '单位名称',
+    "COMPANY_ADDRESS"                       =>  '单位地址',
+    "COMPANY_PHONE"                         =>  '公司电话',
+    "LEGAL_PERSON"                          =>  '法人',
+    "MOBILE_NO"                             =>  '电话',
+    "SERVICE_AREA"                          =>  '服务区域',
+    "EXPIRATION_TIME"                       =>  '到期时间',
+    "AGENT_STORE_LIST"                      =>  '代办商家列表',
+
+
+
 ];
 

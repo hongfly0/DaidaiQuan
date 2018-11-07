@@ -1,0 +1,87 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="#A" data-toggle="tab">{:lang('ADD_AGENT_STORE')}</a></li>
+    </ul>
+    <form class="form-horizontal js-ajax-form margin-top-20" role="form" action="{:url('setting/sitePost')}"
+          method="post">
+        <fieldset>
+            <div class="tabbable">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="A">
+                        <div class="form-group">
+                            <label for="input-site-name" class="col-sm-2 control-label"><span
+                                    class="form-required">*</span>{:lang('THE_CONTACT')}</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" id="input-site-name" name="options[site_name]"
+                                       value="{$null|default=''}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-admin_url_password" class="col-sm-2 control-label">
+                                </span>{:lang('COMPANY_NAME')}</label>
+
+                            </label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" id="input-admin_url_password"
+                                       name="admin_settings[admin_password]"
+                                       value="{$admin_settings.admin_password|default=''}"
+                                       id="js-site-admin-url-password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-site_icp" class="col-sm-2 control-label">{:lang('COMPANY_ADDRESS')}</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" id="input-site_icp" name="options[site_icp]"
+                                       value="{$site_info.site_icp|default=''}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-site_icp" class="col-sm-2 control-label">{:lang('COMPANY_PHONE')}</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" id="input-site_gwa" name="options[site_gwa]"
+                                       value="{$site_info.site_gwa|default=''}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-site_admin_email" class="col-sm-2 control-label">{:lang('LEGAL_PERSON')}</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" id="input-site_admin_email"
+                                       name="legal_person" value="{$site_info.site_admin_email|default=''}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-site_admin_email" class="col-sm-2 control-label">{:lang('MOBILE_NO')}</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control"
+                                       name="mobile" value="{$site_info.site_admin_email|default=''}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-site_admin_email" class="col-sm-2 control-label">{:lang('SERVICE_AREA')}</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control"
+                                       name="mobile" value="{$site_info.site_admin_email|default=''}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-site_admin_email" class="col-sm-2 control-label">{:lang('EXPIRATION_TIME')}</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control"
+                                       name="mobile" value="{$site_info.site_admin_email|default=''}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-primary js-ajax-submit" data-refresh="1">
+                                    {:lang('SAVE')}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+</div>
+<script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+</body>
+</html>
