@@ -74,4 +74,10 @@ class AgentController extends AdminBaseController
         $this->assign("agent", $agent);
         return $this->fetch();
     }
+
+
+    public function upload_pic()
+    {
+        var_dump($_FILES);
+    }
 }

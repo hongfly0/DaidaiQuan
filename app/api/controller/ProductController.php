@@ -21,6 +21,7 @@ class ProductController extends HomeBaseController
     protected  static $limit=25;
     protected  static $qv_ids=array();
     protected  static $zone_ids=array();
+    protected  static $search_key = "";
 
     public function __construct(Request $request = null)
     {
@@ -30,6 +31,7 @@ class ProductController extends HomeBaseController
         $this::$limit = empty($_REQUEST['limit'])?25:$_REQUEST['limt'];
         $this::$qv_ids = empty($_REQUEST['qv_ids'])?array():implode(',',$_REQUEST['qv_ids']);
         $this::$zone_ids = empty($_REQUEST['zone_ids'])?array():$_REQUEST['zone_ids'];
+        $this::$search_key = empty($_REQUEST['search_key'])?"":$_REQUEST['search_key'];
     }
 
 
@@ -49,8 +51,16 @@ class ProductController extends HomeBaseController
 
         $result = Db::table('ddq_product')
             ->where('product_status','1')
-            ->where('product_id','IN',array_column($product_ids,'product_id'))
-            ->select()->toArray();
+            ->where('product_id','IN',array_column($product_ids,'product_id'));
+
+        if(empty($this::$search_key)){
+            $search_key = $this::$search_key;
+            $result = $result->where(function ($query) use ($search_key){
+                $query->where('product_name','LIKE',"%$search_key%")->orwhere('product_detail','LIKE',"%$search_key%");
+            });
+        }
+
+        $result = $result->select()->toArray();
 
         foreach ($result as &$value) {
             $product_query = ProductQueryModel::where('product_id',$value['product_id'])->select()->toArray();
@@ -132,7 +142,7 @@ class ProductController extends HomeBaseController
     }
 
     /**
-     * 收藏列表
+     * 收藏信息
      */
     public function collect(){
         $product_id = $_REQUEST['product_id'];
