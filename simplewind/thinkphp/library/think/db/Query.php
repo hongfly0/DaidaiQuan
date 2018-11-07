@@ -1412,7 +1412,7 @@ class Query
      * @return \think\Paginator
      * @throws DbException
      */
-    public function paginate($listRows = null, $simple = false, $config = [])
+    public function     paginate($listRows = null, $simple = false, $config = [])
     {
         if (is_int($simple)) {
             $total  = $simple;
