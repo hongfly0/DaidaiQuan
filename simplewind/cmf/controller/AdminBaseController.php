@@ -103,4 +103,34 @@ class AdminBaseController extends BaseController
         }
     }
 
+    /**
+     * 返回成功
+     * author Fox
+     */
+    public function apisucces($msg='',$result=array()){
+        $return = array();
+        $msg = empty($msg)?'success':$msg;
+
+        $return['code'] = '1';
+        $return['msg']  = $msg;
+        $return['data'] = $result;
+
+        echo json_encode($return);
+    }
+
+    /**
+     * 返回失败
+     * author Fox
+     */
+    public function apifailed($msg='',$result=array(),$code='-1'){
+        $return = array();
+        $msg = empty($msg)?'failed':$msg;
+
+        $return['code'] = $code;
+        $return['msg']  = $msg;
+        $return['data'] = $result;
+
+        echo json_encode($return);
+    }
+
 }

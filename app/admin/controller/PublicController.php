@@ -11,6 +11,7 @@
 namespace app\admin\controller;
 
 use cmf\controller\AdminBaseController;
+use cmf\lib\Upload;
 use think\Db;
 
 class PublicController extends AdminBaseController
@@ -35,7 +36,7 @@ class PublicController extends AdminBaseController
             return redirect(url("admin/Index/index"));
         } else {
             $site_admin_url_password = config("cmf_SITE_ADMIN_URL_PASSWORD");
-            $upw                     = session("__CMF_UPW__");
+            $upw = session("__CMF_UPW__");
             if (!empty($site_admin_url_password) && $upw != $site_admin_url_password) {
                 return redirect(cmf_get_root() . "/");
             } else {
@@ -101,9 +102,9 @@ class PublicController extends AdminBaseController
                 //登入成功页面跳转
                 session('ADMIN_ID', $result["id"]);
                 session('name', $result["user_login"]);
-                $result['last_login_ip']   = get_client_ip(0, true);
+                $result['last_login_ip'] = get_client_ip(0, true);
                 $result['last_login_time'] = time();
-                $token                     = cmf_generate_user_token($result["id"], 'web');
+                $token = cmf_generate_user_token($result["id"], 'web');
                 if (!empty($token)) {
                     session('token', $token);
                 }
@@ -126,5 +127,26 @@ class PublicController extends AdminBaseController
     {
         session('ADMIN_ID', null);
         return redirect(url('/', [], false, true));
+    }
+
+
+    /**
+     * 图片上传公用方法
+     */
+    public function upload_img()
+    {
+        $upload = new Upload();// 实例化上传类
+        $upload->maxSize = 3145728;// 设置附件上传大小
+        $upload->exts = array('jpg', 'gif', 'png', 'jpeg');// 设置附件上传类型
+        $upload->rootPath = './Uploads/'; // 设置附件上传根目录
+        $upload->savePath = ''; // 设置附件上传（子）目录
+        // 上传文件
+        $info = $upload->upload();
+
+        if (!$info) {
+            echo  json_encode(array('code'=>-1,'msg'=>$upload->getError()));
+        } else {
+            echo json_encode(array('code'=>1,'msg'=>'success','data'=>$info));
+        }
     }
 }
