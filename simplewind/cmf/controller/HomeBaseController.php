@@ -261,4 +261,21 @@ hello;
         echo json_encode($return);
     }
 
+    /**
+     * 检测是否已经被收藏
+     * @param $member_id
+     * @param $product_id
+     * @return int
+     */
+    public function  checkCollect($member_id,$product_id){
+
+        $info = Db::table('ddq_collect_list')->where('member_id',$member_id)->where('product_id',$product_id)->find();
+
+        if(empty($info)){
+            return 0;
+        }else{
+            return 1;
+        }
+    }
+
 }

@@ -53,10 +53,10 @@ class ProductController extends HomeBaseController
             ->where('product_status','1')
             ->where('product_id','IN',array_column($product_ids,'product_id'));
 
-        if(empty($this::$search_key)){
+        if(!empty($this::$search_key)){
             $search_key = $this::$search_key;
             $result = $result->where(function ($query) use ($search_key){
-                $query->where('product_name','LIKE',"%$search_key%")->orwhere('product_detail','LIKE',"%$search_key%");
+                $query->where('product_name','LIKE',"%$search_key%")->whereor('product_detail','LIKE',"%$search_key%");
             });
         }
 
@@ -68,6 +68,13 @@ class ProductController extends HomeBaseController
             foreach ($product_query as $row){
                 $value[$row['pt_en_name']] = $row['pv_value'];
             }
+
+            if(!empty($_REQUEST['member_id'])){
+                $value['collect_status'] = $this->checkCollect($_REQUEST['member_id'],$value['product_id']);
+            }else{
+                $value['collect_status'] = 0;
+            }
+
         }
 
         return $this->apisucces('product list',$result);
@@ -92,6 +99,13 @@ class ProductController extends HomeBaseController
 
         if(!$product_info){
             return $this->apifailed('产品不存在');
+        }
+
+        if(!empty($_REQUEST['member_id'])){
+            //检测是否已收藏
+            $product_info['collect_status'] = $this->checkCollect($_REQUEST['member_id'],$_REQUEST['product_id']);
+        }else{
+            $product_info['collect_status'] = 0;
         }
 
         $result = $product_info;
