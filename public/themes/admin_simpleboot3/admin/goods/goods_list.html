@@ -1,0 +1,72 @@
+<include file="public@header" />
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="{:url('agent/agentStoreList')}">产品列表</a></li>
+    </ul>
+    <form class="well form-inline margin-top-20" method="post" action="{:url('goods/goodsList')}">
+        查找
+        <input type="text" class="form-control" name="key_word" style="width: 30%;" value="{:input('request.user_login/s','')}" placeholder="请输入产品名称">
+        <input type="submit" class="btn btn-primary" value="搜索" />
+    </form>
+    <table class="table table-hover table-bordered">
+        <thead>
+        <tr>
+            <th width="50">ID</th>
+            <th>产品编号</th>
+            <th>服务对象</th>
+            <th>产品类型</th>
+            <th>产品名称</th>
+            <th>还款方式</th>
+            <th>利率</th>
+            <th>发布时间</th>
+            <th>有效期止</th>
+            <th>联系方式</th>
+            <th>审批周期</th>
+            <th>状态</th>
+            <th>浏览量</th>
+            <th width="130">{:lang('ACTIONS')}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <php>$user_statuses=array("0"=>lang('USER_STATUS_BLOCKED'),"1"=>lang('USER_STATUS_ACTIVATED'),"2"=>lang('USER_STATUS_UNVERIFIED'));</php>
+        <foreach name="products" item="vo" key="key">
+            <tr>
+                <td>{$key+1}</td>
+                <td>{$vo.product_no}</td>
+                <td>{$vo.loan_object}</td>
+                <td>
+                    <if condition="!empty($vo['product_type'])">
+                        {$vo.product_type}
+                    </if>
+                </td>
+                <td>{$vo.product_name}</td>
+                <td>
+                    <if condition="!empty($vo['refund_type'])">
+                        {$vo.refund_type}
+                    </if>
+                </td>
+                <td>{$vo.poundage}</td>
+                <td>{$vo.create_at}</td>
+                <td>{$vo.valid_time}</td>
+                <td>{$vo.product_contact}</td>
+                <td>{$vo.audit_cycle}</td>
+                <td>{$vo.product_status}</td>
+                <td>{$vo.view_num}</td>
+                <td width="180px">
+                    <font color="#cccccc"><a href="">查看</a></font>
+                    <font color="#cccccc"><a href="">刷新</a></font>
+                    <font color="#cccccc"><a href="">暂停</a></font>
+                    <font color="#cccccc"><a href="">编辑</a></font>
+                    <font color="#cccccc"><a href="">删除</a></font>
+                </td>
+            </tr>
+        </foreach>
+        </tbody>
+    </table>
+    <div class="pagination">{$page}</div>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>
