@@ -149,4 +149,24 @@ class PublicController extends AdminBaseController
             echo json_encode(array('code'=>1,'msg'=>'success','data'=>$info));
         }
     }
+
+    /**
+     * 富文本编辑器图片上传公用方法
+     */
+    public function Editupload_img()
+    {
+        $upload = new Upload();// 实例化上传类
+        $upload->maxSize = 3145728;// 设置附件上传大小
+        $upload->exts = array('jpg', 'gif', 'png', 'jpeg');// 设置附件上传类型
+        $upload->rootPath = './Uploads/'; // 设置附件上传根目录
+        $upload->savePath = ''; // 设置附件上传（子）目录
+        // 上传文件
+        $info = $upload->upload();
+
+        if (!$info) {
+            echo  json_encode(array('code'=>-1,'msg'=>$upload->getError()));
+        } else {
+            echo json_encode(array('code'=>0,'msg'=>'success','data'=>array('src'=>$info['url'])));
+        }
+    }
 }

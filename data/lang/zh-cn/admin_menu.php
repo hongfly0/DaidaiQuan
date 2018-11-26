@@ -1,14 +1,13 @@
 <?php
 return array (
-
   'ADMIN_AGENT_ADD_AGENT_STORE' => '添加代办商家',
   'ADMIN_AGENT_AGENTSTORELIST' => '代办商家列表',
   'ADMIN_AGENT_INDEX' => '代办人管理',
   'ADMIN_FINANCIAL_FINANCIALLIST' => '金融机构列表',
   'ADMIN_FINANCIAL_INDEX' => '金融机构管理',
+  'ADMIN_GOODS_ADDGOODS' => '产品添加',
   'ADMIN_GOODS_GOODSLIST' => '产品列表',
   'ADMIN_GOODS_LIST' => '产品管理',
-
   'ADMIN_HOOK_INDEX' => '钩子管理',
   'ADMIN_HOOK_PLUGINLISTORDER' => '钩子插件排序',
   'ADMIN_HOOK_PLUGINS' => '钩子插件管理',
