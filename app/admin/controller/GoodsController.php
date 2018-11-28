@@ -104,6 +104,27 @@ class GoodsController extends AdminBaseController{
         return $this->fetch();
     }
 
+    public function post_add_goods(){
+        $data = file_get_contents("php://input");
+        $request_data = \Qiniu\json_decode($data,true);
+
+        $insert_data = array();
+        $insert_query = array();
+
+        foreach ($request_data as $value){
+
+            if(strstr($value['name'],'query_array')){
+                $insert_query[] = $value;
+            }else{
+                $insert_data[$value['name']] = empty($value['value'])?"":$value['value'];
+            }
+        }
+
+        var_dump($insert_query);
+        var_dump($insert_data);
+
+    }
+
     public function updateGoods()
     {
 

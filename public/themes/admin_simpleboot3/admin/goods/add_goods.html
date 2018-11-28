@@ -65,13 +65,16 @@
     }
 
 </style>
+<script>
+    var required_check = new Array();
+</script>
 
 <body>
 <div class="wrap js-check-wrap">
     <ul class="nav nav-tabs">
         <li class="active"><a href="#A" data-toggle="tab">添加产品</a></li>
     </ul>
-    <form class="form-horizontal js-ajax-form margin-top-20 layui-form" role="form" action="return false"
+    <form class="form-horizontal js-ajax-form margin-top-20 layui-form" id="goodsform" role="form" action="return false"
           method="post">
         <fieldset>
             <div class="tabbable" class="layui-form" lay-filter="from_layui">
@@ -114,11 +117,20 @@
                                         <span class="form-required">*</span>
                                     </if>
 
+                                    <script>
+                                        var qt_en_name = '{$vo.qt_en_name}';
+                                        var qt_name = '{$vo.qt_name}';
+                                        var is_required = '{$vo.is_required}';
+
+                                        if(required_check.indexOf(qt_en_name)==-1){
+                                            required_check.push({'en_name':qt_en_name,'qt_name':qt_name,'is_required':is_required});
+                                        }
+                                    </script>
+
                                     {$vo.qt_name}</label>
                                 <div class="col-md-6 col-sm-10" style="vertical-align: middle">
                                     <foreach name="vo['values']" item="vi" >
-                                            <input type="checkbox" lay-skin="primary" value="{$vi.qv_id}" name="{$vo.qt_en_name}[]" title="{$vi.qv_value}">
-                                        &nbsp;&nbsp;
+                                            <input type="checkbox" lay-skin="primary" value="{$vi.qv_id}" class="query.{$vo.qt_en_name}" title="{$vi.qv_value}">
                                     </foreach>
                                 </div>
                             </div>
@@ -336,53 +348,42 @@
         var form = layui.form;
 
         form.on('submit(*)', function (data) {
-            var agent_name = $("#agent_name").val(),
-                agent_company = $("#agent_company").val(),
-                agent_company_address = $("#agent_company_address").val(),
-                agent_company_phone = $("#agent_company_phone").val(),
-                agent_company_owner = $("#agent_company_owner").val(),
-                agent_mobile = $("#agent_mobile").val(),
-                agent_zode = $("#agent_zode").val(),
-                due_datetime = $("#due_datetime").val(),
-                agent_business_license_img = $("#img_upload1").data('agent_business_license_img'),
-                agent_ID_card_postitive = $("#img_upload2").data('agent_ID_card_postitive'),
-                agent_ID_card_back = $("#img_upload3").data('agent_ID_card_back'),
-                agent_hand_idcard = $("#img_upload4").data('agent_hand_idcard');
+            var post_data = new  Array();
+            var form = $("#goodsform").serializeArray();
 
-            var product_nums =[];
-            $("input[name='product_num']").each(function(){
-                product_nums.push($(this).val());
+            var check_box = true;
+            var check_box_msg = "";
+            required_check.forEach(function (value,index,array) {
+                var arr = new Array();
+                var key = 'query.'+value.en_name;
+                $("input:checkbox[class='"+key+"']:checked").each(function(i){
+                    arr[i] = $(this).val();
+                });
+
+                if(arr.length==0 && value.is_required==1){
+                    check_box_msg += value.qt_name+"必选项不能为空 <br>" ;
+                    check_box = false;
+                }
+
+                form.push({'name':'query_array_'+value.en_name,'values':arr});
             });
 
-            console.log(product_nums);
-
-            var data = {
-                "agent_name": agent_name,
-                "agent_company": agent_company,
-                "agent_company_address": agent_company_address,
-                "agent_company_phone": agent_company_phone,
-                "agent_company_owner": agent_company_owner,
-                "agent_mobile": agent_mobile,
-                "agent_zode": agent_zode,
-                "due_datetime": due_datetime,
-                "agent_business_license_img": agent_business_license_img,
-                "agent_ID_card_postitive": agent_ID_card_postitive,
-                "agent_ID_card_back": agent_ID_card_back,
-                "agent_hand_idcard": agent_hand_idcard,
-                "product_nums": product_nums
-            };
+            if(check_box == false){
+                layer.msg(check_box_msg);
+                return false;
+            }
 
             $.ajax({
-                url: "{:url('Agent/post_add_agent_store')}",
+                url: "{:url('goods/post_add_goods')}",
                 type: "POST",
-                data: data,
+                data: JSON.stringify(form),
                 dataType: "JSON",
                 success: function (res) {
                     if (res.code != '1') {
                         layer.msg(res.msg);
                     } else {
                         layer.msg(res.msg);
-                        location.href="{:url('Agent/agentStoreList')}";
+                        location.href="{:url('goods/goodslist')}";
                     }
                 }
             });
