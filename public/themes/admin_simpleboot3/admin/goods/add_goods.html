@@ -268,52 +268,13 @@
     layui.use('upload', function () {
         var upload = layui.upload;
 
-        //营业执照
+        //产品图片
         var uploadInst1 = upload.render({
             elem: '#upload1' //绑定元素
             , url: '/admin/public/upload_img' //上传接口
             , done: function (res) {
                 $("#img_upload1").attr('src', res.data.url);
-                $("#img_upload1").data('agent_business_license_img', res.data.url);
-            }
-            , error: function () {
-                //请求异常回调
-            }
-        });
-
-        //身份证正面
-        var uploadInst2 = upload.render({
-            elem: '#upload2' //绑定元素
-            , url: '/admin/public/upload_img' //上传接口
-            , done: function (res) {
-                $("#img_upload2").attr('src', res.data.url);
-                $("#img_upload2").data('agent_ID_card_postitive', res.data.url);
-            }
-            , error: function () {
-                //请求异常回调
-            }
-        });
-
-        //身份证反面
-        var uploadInst3 = upload.render({
-            elem: '#upload3' //绑定元素
-            , url: '/admin/public/upload_img' //上传接口
-            , done: function (res) {
-                $("#img_upload3").attr('src', res.data.url);
-                $("#img_upload3").data('agent_ID_card_back', res.data.url);
-            }
-            , error: function () {
-                //请求异常回调
-            }
-        });
-
-        //个人手执身份证正面照片
-        var uploadInst4 = upload.render({
-            elem: '#upload4' //绑定元素
-            , url: '/admin/public/upload_img' //上传接口
-            , done: function (res) {
-                $("#img_upload4").attr('src', res.data.url);
-                $("#img_upload4").data('agent_hand_idcard', res.data.url);
+                $("#img_upload1").data('product_image', res.data.url);
             }
             , error: function () {
                 //请求异常回调
@@ -350,6 +311,15 @@
         form.on('submit(*)', function (data) {
             var post_data = new  Array();
             var form = $("#goodsform").serializeArray();
+
+            var product_image = $("#img_upload1").data('product_image');
+
+            if(!product_image){
+                layer.msg('请上传产品图片');
+                return false;
+            }else{
+                form.push({'name':'product_image','values':product_image});
+            }
 
             var check_box = true;
             var check_box_msg = "";

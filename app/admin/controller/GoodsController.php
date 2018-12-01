@@ -114,15 +114,48 @@ class GoodsController extends AdminBaseController{
         foreach ($request_data as $value){
 
             if(strstr($value['name'],'query_array')){
-                $insert_query[] = $value;
+                $insert_query = array_merge($insert_query,$value['values']);
             }else{
                 $insert_data[$value['name']] = empty($value['value'])?"":$value['value'];
             }
         }
 
-        var_dump($insert_query);
-        var_dump($insert_data);
 
+        $query_type_values = Db::name('query_value')->alias('qv')->join('ddq_query_type qt','qv.qt_id=qt.qt_id')
+                            ->field('qv.qv_id,qv.qv_value,qv.qt_id,qt.qt_en_name,qt.qt_name')
+                            ->whereIn('qv.qv_id',$insert_query)->select()->toArray();
+
+        Db::startTrans();
+
+        $insert_data['create_user_id'] = 1;
+
+        $insert_res = Db::name('product')->insertGetId($insert_data);
+
+
+        $insert_query_data = array();
+
+        foreach ($query_type_values as $row){
+            $insert_query_data[] = array(
+                "product_id" => $insert_res,
+                "pt_id" => $row['qt_id'],
+                "pt_en_name" => $row['qt_en_name'],
+                "pt_name" => $row['qt_name'],
+                "pv_id" => $row['qv_id'],
+                "pv_value" => $row['qv_value']
+            );
+        }
+
+        $insert_query_res = Db::name('product_query')->insertAll($insert_query_data);
+
+        if($insert_res && $insert_query_res){
+            Db::commit();
+
+            return $this->apisucces('添加成功');
+        }else{
+            Db::rollback();
+
+            return $this->apifailed('添加失败');
+        }
     }
 
     public function updateGoods()
