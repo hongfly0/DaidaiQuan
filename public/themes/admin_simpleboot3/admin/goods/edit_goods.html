@@ -72,7 +72,7 @@
 <body>
 <div class="wrap js-check-wrap">
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#A" data-toggle="tab">添加产品</a></li>
+        <li class="active"><a href="#A" data-toggle="tab">编辑产品</a></li>
     </ul>
     <form class="form-horizontal js-ajax-form margin-top-20 layui-form" id="goodsform" role="form" action="return false"
           method="post">
@@ -85,7 +85,7 @@
                                 <span class="form-required">*</span>产品名称</label>
                             <div class="col-md-6 col-sm-10">
                                 <input type="text" class="form-control" id="product_name" name="product_name"
-                                       lay-verify="required" value="">
+                                       lay-verify="required" value="{$product.product_name}">
                             </div>
                         </div>
                         <div class="form-group">
@@ -94,8 +94,15 @@
 
                             </label>
                             <div class="col-md-6 col-sm-10">
-                                <img class="avatar" id="img_upload1" src="__STATIC__/images/load_img.png"
-                                     data-agent_business_license_img="" style="float: left">
+                                <if condition="$product.product_image neq ''" >
+                                    <img class="avatar" id="img_upload1" src="{$product.product_image}"
+                                         data-agent_business_license_img="" style="float: left" data-product_image="{$product.product_image}">
+                                    <else>
+                                        <img class="avatar" id="img_upload1" src="__STATIC__/images/load_img.png"
+                                             data-agent_business_license_img="" style="float: left">
+                                    </else>
+                                </if>
+
                                 <button type="button" class="layui-btn" id="upload1" style="width: 120px;margin-left: 10px;margin-top: 20px">
                                     <i class="layui-icon">&#xe67c;</i>上传图片
                                 </button>
@@ -130,7 +137,7 @@
                                     {$vo.qt_name}</label>
                                 <div class="col-md-6 col-sm-10" style="vertical-align: middle">
                                     <foreach name="vo['values']" item="vi" >
-                                            <input type="checkbox" lay-skin="primary" value="{$vi.qv_id}" class="query.{$vo.qt_en_name}" title="{$vi.qv_value}">
+                                            <input type="checkbox" lay-skin="primary" value="{$vi.qv_id}" id="query_{$vi.qv_id}" class="query.{$vo.qt_en_name}" title="{$vi.qv_value}">
                                     </foreach>
                                 </div>
                             </div>
@@ -140,15 +147,16 @@
                             <label class="col-sm-2 control-label"><span class="form-required">*</span>所属单位</label>
                             <div class="col-md-6 col-sm-10">
                                 <input type="text" class="form-control" id="company_name"
-                                       name="company_name" lay-verify="required" value=""
-                                       value="">
+                                       name="company_name" lay-verify="required" value="{$product.company_name}">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label"><span class="form-required">*</span>产品介绍</label>
                             <div class="col-md-6 col-sm-10">
-                                <textarea id="product_detail" style="display: none;"></textarea>
+                                <textarea id="product_detail" name="product_detail" style="display: none;" lay-verify="required">
+                                    {$product.product_detail}
+                                </textarea>
 
                             </div>
                         </div>
@@ -157,20 +165,20 @@
                             <label class="col-sm-2 control-label">贷款对象</label>
                             <div class="col-md-6 col-sm-10">
                                 <input type="text" class="form-control" id="loan_object"
-                                       name="loan_object" value="">
+                                       name="loan_object" value="{$product.loan_object}">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">贷款用途</label>
                             <div class="col-md-6 col-sm-10">
                                 <input type="text" class="form-control" id="loan_use_dor"
-                                       name="loan_use_dor">
+                                       name="loan_use_dor" value="{$product.loan_use_dor}">
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">贷款期限</label>
                             <div class="col-md-6 col-sm-10">
-                                最高(<input type="text" class="layui-input" id="loan_time_limit"  name="loan_time_limit" value="" style="width: 100px;display: inline-block" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" maxlength="6" size="14"> )年
+                                最高(<input type="text" class="layui-input" id="loan_time_limit"  name="loan_time_limit" value="$product.loan_time_limit}" style="width: 100px;display: inline-block" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" maxlength="6" size="14"> )年
                             </div>
                         </div>
 
@@ -178,7 +186,7 @@
                             <label class="col-sm-2 control-label">担保方式</label>
                             <div class="col-md-6 col-sm-10">
                                 <input type="text" class="form-control" id="assure_means"
-                                       name="assure_means">
+                                       name="assure_means" value="{$product.assure_means}">
                             </div>
                         </div>
 
@@ -186,43 +194,42 @@
                             <label class="col-sm-2 control-label">贷款金额</label>
                             <div class="col-md-6 col-sm-10">
                                 最高
-                                <input type="text" class="layui-input" id="loan_amount"  name="loan_amount" value="" style="width: 100px;display: inline-block" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" maxlength="9" size="14">
+                                <input type="text" class="layui-input" id="loan_amount"  name="loan_amount" value="{$product.loan_amount}" style="width: 100px;display: inline-block" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" maxlength="9" size="14">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">利率</label>
                             <div class="col-md-6 col-sm-10">
-                                低至<input type="text" class="layui-input" id="interest_rate"  name="interest_rate" value="" style="width: 100px;display: inline-block" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" maxlength="3" size="14">
+                                低至<input type="text" class="layui-input" id="interest_rate"  name="interest_rate" value="{$product.interest_rate}" style="width: 100px;display: inline-block" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" maxlength="4" size="14">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">手续费</label>
                             <div class="col-md-6 col-sm-10">
-                                最高<input type="text" class="layui-input" id="poundage"  name="poundage" value="" style="width: 100px;display: inline-block" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" maxlength="8" size="14">
+                                最高<input type="text" class="layui-input" id="poundage"  name="poundage" value="{$product.poundage}" style="width: 100px;display: inline-block" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" maxlength="8" size="14">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label"><span class="form-required">*</span>必备条件</label>
                             <div class="col-md-6 col-sm-10">
-                                <input type="text" class="form-control" lay-verify="required"  id="must_conditions"
-                                       name="must_conditions">
+                                <input type="text" class="form-control" lay-verify="required" value="{$product.must_conditions}" id="must_conditions" name="must_conditions">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">审核周期</label>
                             <div class="col-md-6 col-sm-10">
-                                最高<input type="text" class="layui-input" id="audit_cycle"  name="audit_cycle" value="" style="width: 100px;display: inline-block" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" maxlength="8" size="14">
+                                最高<input type="text" class="layui-input" id="audit_cycle"  name="audit_cycle" value="{$product.audit_cycle}" style="width: 100px;display: inline-block" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" maxlength="8" size="14">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">有效期止</label>
                             <div class="col-md-6 col-sm-10">
-                                <input type="text" class="form-control"  id="valid_time"
+                                <input type="text" class="form-control" value="{$product.valid_time}" id="valid_time"
                                        name="valid_time" style="width: 200px">
                             </div>
                         </div>
@@ -237,12 +244,13 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">备注</label>
                             <div class="col-md-6 col-sm-10">
-                                <textarea name="" placeholder="请输入" name="product_remark" id="product_remark" class="layui-textarea"></textarea>
+                                <textarea name="" placeholder="请输入" name="product_remark" id="product_remark" class="layui-textarea">{$product.product_remark}</textarea>
                             </div>
                         </div>
 
 
                     </div>
+                    <input type="hidden" name="product_id" value="{$product.product_id}" id="product_id">
                     <button lay-submit lay-filter="*" type="button" class="layui-btn" id="submit_form"
                             style="width: 30%;margin-top: 10px;margin-left: 20%">
                         提交保存
@@ -260,9 +268,10 @@
 
 <script>
 
-    $('.addel-container').addel({
+    var  query_values = {$product_query};
 
-
+    query_values.forEach(function (value,index,array) {
+        $("#query_"+value.pv_id).attr("checked","true");
     });
 
     layui.use('upload', function () {
@@ -291,10 +300,9 @@
             type: 'datetime'
         });
     });
-    var layedit = "";
 
     layui.use('layedit', function(){
-        layedit = layui.layedit;
+        var layedit = layui.layedit;
         layedit.set({
             uploadImage: {
                 url: "{:url('public/Editupload_img')}" //接口url
@@ -315,19 +323,10 @@
             var product_image = $("#img_upload1").data('product_image');
 
             if(!product_image){
-                layer.msg('请上传产品图片',{icon:5});
+                layer.msg('请上传产品图片');
                 return false;
             }else{
-                form.push({'name':'product_image','value':product_image});
-            }
-
-            var product_detail = layedit.getContent(1);
-
-            if(!product_detail){
-                ayer.msg('请填写产品介绍',{icon:5});
-                return false;
-            }else {
-                form.push({'name':'product_detail','value':product_detail});
+                form.push({'name':'product_image','values':product_image});
             }
 
             var check_box = true;
@@ -348,7 +347,7 @@
             });
 
             if(check_box == false){
-                layer.msg(check_box_msg,{icon:5});
+                layer.msg(check_box_msg);
                 return false;
             }
 
@@ -371,10 +370,6 @@
 
         });
     });
-    
-    function checkProduct(product_num) {
-        console.log(product_num);
-    }
 
 </script>
 </body>

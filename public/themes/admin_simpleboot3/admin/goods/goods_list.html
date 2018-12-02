@@ -52,14 +52,26 @@
                 <td>{$vo.valid_time}</td>
                 <td>{$vo.product_contact}</td>
                 <td>{$vo.audit_cycle}</td>
-                <td>{$vo.product_status}</td>
+                <td id="status_{$vo.product_id}">
+                    <php>
+                        $status_mapping = array(1=>'发布中',2=>'暂停',3=>'已过期',4=>'待审核');
+                        echo $status_mapping[$vo['product_status']];
+                    </php>
+                </td>
                 <td>{$vo.view_num}</td>
                 <td width="180px">
-                    <font color="#cccccc"><a href="">查看</a></font>
-                    <font color="#cccccc"><a href="">刷新</a></font>
-                    <font color="#cccccc"><a href="">暂停</a></font>
-                    <font color="#cccccc"><a href="">编辑</a></font>
-                    <font color="#cccccc"><a href="">删除</a></font>
+                    <font color="#cccccc"><a href="/Admin/goods/product_detail?product_id={$vo.product_id}">查看</a></font>
+                    <font color="#cccccc"><a href="javascript:void(0)" onclick="refresh_product({$vo.product_id})">刷新</a></font>
+                    <font color="#cccccc"><a href="javascript:void(0)" onclick="pause_product(this,{$vo.product_id})">
+                        <if condition="$vo.product_status eq 1">
+                             暂停
+                            <else>
+                                发布
+                            </else>
+                        </if>
+                    </a></font>
+                    <font color="#cccccc"><a href="/Admin/goods/edit_goods?product_id={$vo.product_id}">编辑</a></font>
+                    <font color="#cccccc"><a href="javascript:void(0)" onclick="del_product({$vo.product_id})">删除</a></font>
                 </td>
             </tr>
         </foreach>
@@ -68,5 +80,71 @@
     <div class="pagination">{$page}</div>
 </div>
 <script src="__STATIC__/js/admin.js"></script>
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script type="text/javascript" src="__STATIC__/layer/layer.js"></script>
+<script>
+    function refresh_product(id) {
+        $.ajax({
+            url: "{:url('goods/refresh_product')}",
+            type: "POST",
+            data: {"product_id":id},
+            dataType: "JSON",
+            success: function (res) {
+                layer.msg(res.msg);
+            }
+        });
+    }
+
+    function pause_product(e,id) {
+        $.ajax({
+            url: "{:url('goods/pause_product')}",
+            type: "POST",
+            data: {"product_id":id},
+            dataType: "JSON",
+            success: function (res) {
+                layer.msg(res.msg);
+                if(res.code==1){
+                    var process_status = res.data.product_status;
+                    var show_str = "发布中";
+                    var btn_str = "暂停";
+
+                    if(process_status == 2){
+                        show_str = "暂停";
+                        btn_str = "发布";
+                    }
+
+                    $("#status_"+id).html(show_str);
+                    $(e).text(btn_str);
+                }
+            }
+        });
+    }
+
+    /**
+     * 删除产品
+     */
+    function del_product(product_id) {
+        layer.confirm('确定要删除吗？', {
+            btn: ['删除','取消'] //按钮
+        }, function(){
+            $.ajax({
+                url: "{:url('goods/delGoods')}",
+                type: "POST",
+                data: {"product_id":product_id},
+                dataType: "JSON",
+                success: function (res) {
+                    if(res.code == 1){
+                        layer.msg(res.msg, {icon: 1});
+                        location.href="{:url('goods/goodsList')}";
+                    }else{
+                        layer.msg(res.msg, {icon: 2});
+                    }
+                }
+            });
+        }, function(){
+            layer.close();
+        });
+    }
+</script>
 </body>
 </html>

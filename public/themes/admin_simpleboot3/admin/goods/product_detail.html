@@ -1,0 +1,84 @@
+<include file="public@header"/>
+</head>
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all">
+<style>
+    .boxa{ overflow:hidden}
+    .boxa,.boxb{ margin:0 auto; width:400px;}
+    .boxa-l{ float:left; width:280px; height:80px; }
+    .boxa-r{ float:right; width:100px; height:80px; }
+    .boxb{ border:1px solid #bababa; height:auto;}
+</style>
+<script>
+    var required_check = new Array();
+</script>
+
+<body>
+<div class="wrap js-check-wrap">
+    <form class="form-horizontal js-ajax-form margin-top-20 layui-form" id="goodsform" role="form" action="return false"
+          method="post">
+        <fieldset>
+            <div class="tabbable"  class="layui-form" lay-filter="from_layui" style="width: 80%;margin-left: 10%">
+                <center><dvi>{$info.product_name}</dvi></center>
+
+                 <div class="boxa" style="width: 100%;height: 30px;">
+                        <div class="boxa-l" style="width: 50%; float: left;">
+                                发布时间:{$info.create_at}
+                            </div>
+                            <div class="boxa-r" style="width: 50%;float: left;text-align: right">
+                                产品编号:{$info.product_no}
+                            </div>
+                    </div>
+                    <div class="boxb" style="width: 100%;padding: 10px">
+                        {$info.product_detail}
+                    </div>
+                    <div class="boxb" style="width: 100%;padding: 10px;text-align: center;border: 0px">
+                        <button lay-submit lay-filter="*" type="button" class="layui-btn" id="edit_product"
+                                style="width: 20%;margin-top: 10px;margin-left: 20%" onclick="location.href='/Admin/Goods/editGoods?product_id={$info.product_id}'">
+                            编辑内容
+                        </button>
+                        <button lay-submit lay-filter="*" type="button" class="layui-btn" id="del_product"
+                                style="width: 20%;margin-top: 10px;margin-left: 20%" data-product_id="{$info.product_id}">
+                            删除产品
+                        </button>
+                    </div>
+            </div>
+        </fieldset>
+        </form>
+</div>
+<script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script type="text/javascript" src="__STATIC__/layer/layer.js"></script>
+<script type="text/javascript" src="__STATIC__/addel/addel.jquery.js"></script>
+
+<script>
+    /**
+     * 删除产品
+     */
+    $("#del_product").click(function () {
+        var product_id = $("#del_product").data("product_id");
+        layer.confirm('确定要删除吗？', {
+            btn: ['删除','取消'] //按钮
+        }, function(){
+            $.ajax({
+                url: "{:url('goods/delGoods')}",
+                type: "POST",
+                data: {"product_id":product_id},
+                dataType: "JSON",
+                success: function (res) {
+                    if(res.code == 1){
+                        layer.msg(res.msg, {icon: 1});
+                        location.href="{:url('goods/goodsList')}";
+                    }else{
+                        layer.msg(res.msg, {icon: 2});
+                    }
+                }
+            });
+        }, function(){
+            layer.close();
+        });
+    });
+
+</script>
+</body>
+</html>

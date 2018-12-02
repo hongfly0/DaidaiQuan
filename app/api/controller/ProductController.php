@@ -34,6 +34,12 @@ class ProductController extends HomeBaseController
         $this::$search_key = empty($_REQUEST['search_key'])?"":$_REQUEST['search_key'];
     }
 
+    /**
+     * 小程序筛选条件
+     */
+    public function query_value(){
+
+    }
 
     /**
      * 產品列表
@@ -81,7 +87,7 @@ class ProductController extends HomeBaseController
     }
 
 
-    /**
+    /**=
      * 产品详情
      * author Fox
      */
