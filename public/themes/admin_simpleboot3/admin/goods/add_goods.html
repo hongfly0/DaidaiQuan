@@ -352,6 +352,8 @@
                 return false;
             }
 
+            form.push({'name':'product_remark','value':$("#product_remark").val()});
+
             $.ajax({
                 url: "{:url('goods/post_save_goods')}",
                 type: "POST",

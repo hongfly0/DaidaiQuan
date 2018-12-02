@@ -34,6 +34,7 @@ class GoodsController extends AdminBaseController{
 
         $products = Db::name('product')
             ->where($where)
+            ->whereIn('product_status',array('1','2'))
             ->order("product_id DESC")
             ->paginate(20);
         // 获取分页显示
@@ -313,12 +314,10 @@ class GoodsController extends AdminBaseController{
         $product_id = $update_data['product_id'];
 
         unset($update_data['product_id']);
-        var_dump($update_data);
-        die;
+
         Db::startTrans();
 
         $update_data['create_user_id'] = 1;
-        $update_data['product_status'] = 4;
         $update_data['create_at'] = date('Y-m-d H:i:s');
         $update_data['edit_at'] = date('Y-m-d H:i:s');
 

@@ -178,7 +178,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">贷款期限</label>
                             <div class="col-md-6 col-sm-10">
-                                最高(<input type="text" class="layui-input" id="loan_time_limit"  name="loan_time_limit" value="$product.loan_time_limit}" style="width: 100px;display: inline-block" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" maxlength="6" size="14"> )年
+                                最高(<input type="text" class="layui-input" id="loan_time_limit"  name="loan_time_limit" value="{$product.loan_time_limit}" style="width: 100px;display: inline-block" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" maxlength="6" size="14"> )年
                             </div>
                         </div>
 
@@ -247,8 +247,6 @@
                                 <textarea name="" placeholder="请输入" name="product_remark" id="product_remark" class="layui-textarea">{$product.product_remark}</textarea>
                             </div>
                         </div>
-
-
                     </div>
                     <input type="hidden" name="product_id" value="{$product.product_id}" id="product_id">
                     <button lay-submit lay-filter="*" type="button" class="layui-btn" id="submit_form"
@@ -326,7 +324,7 @@
                 layer.msg('请上传产品图片');
                 return false;
             }else{
-                form.push({'name':'product_image','values':product_image});
+                form.push({'name':'product_image','value':product_image});
             }
 
             var check_box = true;
@@ -350,6 +348,8 @@
                 layer.msg(check_box_msg);
                 return false;
             }
+
+            form.push({'name':'product_remark','value':$("#product_remark").val()});
 
             $.ajax({
                 url: "{:url('goods/post_save_goods')}",

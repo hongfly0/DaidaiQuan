@@ -25,7 +25,6 @@
             <th>身份证</th>
             <th>个人照片</th>
             <th>审核</th>
-            <th>操作</th>
             <th width="130">{:lang('ACTIONS')}</th>
         </tr>
         </thead>
@@ -44,7 +43,6 @@
                 <td><a href={$vo.agent_business_license_img} >图</a></td>
                 <td><a href="{$vo.agent_ID_card_postitive}" >图</a> <span style="padding-left: 10px"></span> <a href="{$vo.agent_ID_card_back}" >图</a></td>
                 <td><a href="{$vo.agent_hand_idcard}" >图</a></td>
-                <td>{$vo.agent_id}</td>
                 <td>
                     <if condition="$vo['agent_status'] eq 1">
                         是
@@ -55,7 +53,7 @@
                 <td>
                     <font color="#cccccc"><a href="">删除</a></font>
                     <font color="#cccccc"><a href="">暂停</a></font>
-                    <font color="#cccccc"><a href="">编辑</a></font>
+                    <font color="#cccccc"><a href="/Admin/agent/editAgent?agent_id={$vo.agent_id}">编辑</a></font>
                 </td>
             </tr>
         </foreach>

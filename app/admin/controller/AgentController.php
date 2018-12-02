@@ -105,9 +105,8 @@ class AgentController extends AdminBaseController
 
             return $this->apisucces('操作成功');
         }else{
-            return $this->apifailed('操作失敗');
+            return $this->apifailed('操作失败');
         }
-
     }
 
 
@@ -141,5 +140,80 @@ class AgentController extends AdminBaseController
         return $this->fetch();
     }
 
+    /**
+     * 显示编辑代办人界面
+     */
+    public function editAgent(){
+        $agent_id = $_REQUEST['agent_id'];
+
+        $agent = Db::name('agent')->where('agent_id',$agent_id)->find();
+
+        $this->assign("agent", $agent);
+        return $this->fetch();
+    }
+
+    /**
+     * 保存代办人提交
+     */
+    public function post_edit_agent_store(){
+        $data = $_POST;
+
+        $product_nums = $data['product_nums'];
+        $agent_id = $data['agent_id'];
+        unset($data['agent_id']);
+
+        $product_infos = array();
+
+        //检测产品是否存在
+        if($product_nums){
+            $product_infos = Db::table('ddq_product')->whereIn('product_no',$product_nums)->field('product_id,product_no')->select()->toArray();
+
+            $product_array = array_column($product_infos,'product_no');
+
+            $missing_msg = "";
+
+            foreach ($product_nums as $val){
+                if(!in_array($val,$product_array)){
+                    $missing_msg .= " 产品编号:".$val."不存在;<br>";
+                }
+            }
+
+            if(!empty($missing_msg)){
+                return  $this->apifailed($missing_msg,array(),'-1');
+            }
+        }
+
+        unset($data['product_nums']);
+
+        $check_is_exits =  AgentModel::find(function($query) use ($data){
+            $query->where('agent_mobile','=',$data['agent_mobile']);
+        });
+
+        if($check_is_exits){
+            return  $this->apifailed('账户已存在',array(),'-2');
+        }
+
+        $data['create_at'] = date('Y-m-d H:i:s');
+        $agent = Db::table('ddq_agent')->where('agent_id',$agent_id)->update($data);
+        $agentId = Db::name('ddq_agent')->getLastInsID();
+
+        if($agent){
+            foreach ($product_infos as $row) {
+                $insert_array = array();
+
+                $insert_array['product_id']  = $row['product_id'];
+                $insert_array['product_no'] = $row['product_no'] ;
+                $insert_array['create_at'] = date('Y-m-d H:i:s');
+                $insert_array['update_at'] = date('Y-m-d H:i:s');
+                $insert_array['agent_id']  = $agentId;
+
+                Db::table('ddq_agent_product')->insert($insert_array);
+            }
+
+            return $this->apisucces('更新成功');
+        }else{
+            return $this->apifailed('更新失败');
+        }
+    }
 
 }
