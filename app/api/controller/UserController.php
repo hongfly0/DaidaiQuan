@@ -28,6 +28,11 @@ class UserController extends HomeBaseController
     protected  static $limit=25;
 
     /**
+     *
+     */
+
+
+    /**
      * 获取用户信息
      * author Fox
      */
