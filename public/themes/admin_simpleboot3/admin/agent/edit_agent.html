@@ -143,19 +143,20 @@
                             </span>
 
                                 <div class="addel-container">
-                                    <div class="addel-target" style="margin-bottom: 5px;">
-                                        <div class="input-group">
-                                            <input type="text" value="" placeholder="产品编号" id="contact" name="product_num" class="form-control" >
-                                            <span class="input-group-btn">
-                                                <button type="button" class="btn btn-danger" data-addel-delete>
-                                                    <i class="fa fa-remove"></i>
-                                                </button>
-                                            </span>
+                                    <foreach name="agent_product" item="vo">
+                                        <div class="addel-target" style="margin-bottom: 5px;">
+                                            <div class="input-group">
+                                                <input type="text" value="{$vo.product_no}" placeholder="产品编号" id="contact" name="product_num" class="form-control" >
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-danger" data-addel-delete>
+                                                        <i class="fa fa-remove"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
+                                        </foreach>
                                     <button type="button" class="addel-add btn btn-success btn-block">添加</button>
                                 </div>
-
                             </div>
                             <ul class="upload-img">
                                 <li>

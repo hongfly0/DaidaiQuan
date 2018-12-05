@@ -148,6 +148,9 @@ class AgentController extends AdminBaseController
 
         $agent = Db::name('agent')->where('agent_id',$agent_id)->find();
 
+        $agent_product = Db::name('agent_product')->where('agent_id',$agent_id)->select()->toArray();
+
+        $this->assign('agent_product',$agent_product);
         $this->assign("agent", $agent);
         return $this->fetch();
     }
@@ -183,21 +186,15 @@ class AgentController extends AdminBaseController
             }
         }
 
+        Db::startTrans();
+
         unset($data['product_nums']);
-
-        $check_is_exits =  AgentModel::find(function($query) use ($data){
-            $query->where('agent_mobile','=',$data['agent_mobile']);
-        });
-
-        if($check_is_exits){
-            return  $this->apifailed('账户已存在',array(),'-2');
-        }
 
         $data['create_at'] = date('Y-m-d H:i:s');
         $agent = Db::table('ddq_agent')->where('agent_id',$agent_id)->update($data);
-        $agentId = Db::name('ddq_agent')->getLastInsID();
 
         if($agent){
+            $insert_array_batch =  array();
             foreach ($product_infos as $row) {
                 $insert_array = array();
 
@@ -205,14 +202,26 @@ class AgentController extends AdminBaseController
                 $insert_array['product_no'] = $row['product_no'] ;
                 $insert_array['create_at'] = date('Y-m-d H:i:s');
                 $insert_array['update_at'] = date('Y-m-d H:i:s');
-                $insert_array['agent_id']  = $agentId;
+                $insert_array['agent_id']  = $agent_id;
 
-                Db::table('ddq_agent_product')->insert($insert_array);
+                $insert_array_batch[] = $insert_array;
             }
+
+            $del_res = Db::name('agent_product') ->where('agent_id',$agent_id)->delete();
+
+            $insert_res = Db::table('ddq_agent_product')->insertAll($insert_array_batch);
+
+            if(!$insert_res){
+                Db::rollback();
+                return $this->apifailed('更新失败1');
+            }
+
+            Db::commit();
 
             return $this->apisucces('更新成功');
         }else{
-            return $this->apifailed('更新失败');
+            Db::rollback();
+            return $this->apifailed('更新失败2');
         }
     }
 
