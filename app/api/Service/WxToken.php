@@ -1,6 +1,7 @@
 <?php
 namespace app\api\Service;
 use app\api\Service\Token;
+use app\portal\model\MemberModel;
 use think\Exception;
 
 class WxToken extends Token {
@@ -14,18 +15,19 @@ class WxToken extends Token {
 
         //从服务器换取 openid 需要传递三个参数
         // Appid、Appsecret、Code
-        $this->Appid = config('wx.app_id');
-        $this->AppSecret = config('wx.app_secret');
+        $this->Appid = config('app_id');
+        $this->AppSecret = config('app_secret');
 
         //sprintf的作用是将字符串中占位符用特定值按顺序替换
-        $this->LoginUrl = sprintf(config('wx.login_url'), $this->Appid, $this->AppSecret, $this->code);
+        $this->LoginUrl = sprintf(config('login_url'), $this->Appid, $this->AppSecret, $this->code);
     }
     /**
      * 根据用户传递 code 去微信服务器换取 openid
      */
     public function get() {
-        $result = curl_get($this->LoginUrl);
+        $result = cmf_curl_get($this->LoginUrl);
         $wxResult = json_decode($result, true);
+
         if (empty($wxResult)) {
             throw new Exception("获取session_key和open_id失败，微信内部错误");
         }
@@ -44,23 +46,19 @@ class WxToken extends Token {
      * 作用是 当用户不存在时创建用户   存在时返回用户 id
      */
     private function grantToken($openid) {
-        $user = User::where('openid', $openid)->find();
+        $user = MemberModel::where('openid', $openid)->find();
         if (!$user) {
-            $uid = User::create([
+            $uid = MemberModel::create([
                 'openid' => $openid,
             ]);
         } else {
             $uid = $user->id;
         }
         //存入缓存 key：生成返回客户端的令牌 value：openid + uid
-        $key = $this->generateToken();
-        $cache_value['openid'] = $openid;
-        $cache_value['uid'] = $uid;
-        $expire = config('token.expire');
-        if (!cache($key, $cache_value, $expire)) {
-            throw new Exception("缓存客户令牌时出现错误");
-        } else {
-            return $key;
-        }
+        $key = $this->generateToken($user->id);
+
+
+        
+        return array('key'=>$key,'user'=>$user);
     }
 }

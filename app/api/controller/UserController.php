@@ -16,6 +16,7 @@ header('Access-Control-Allow-Methods:*');
 // 响应头设置
 header('Access-Control-Allow-Headers:x-requested-with,content-type');
 
+use app\api\Service\WxToken;
 use app\portal\model\MemberModel;
 use app\portal\model\ProductModel;
 use app\portal\model\ProductQueryModel;
@@ -30,6 +31,21 @@ class UserController extends HomeBaseController
     /**
      *
      */
+    public function getToken() {
+        $code = $this->request->param('code');
+        $iv = $this->request->param('iv');
+        $encryptedData = $this->request->param('encryptedData');
+
+        $iv = 'OaAQLo9e1o/cbEUG2E1Sag==';
+        $encryptedData  = 'RqdDzpIiCrHPr6vk5vVZWgdpxM64ayGrxHfUYPOkqlYo3P+FYNv45zZ/psptkQaJpX4D/jHzwfM/fRlotVlYTx3/G9hSz1z/JNv4WWzBcWIw3J+tQpQcJR4PRTPxb/1BaSaIt/5mx4XubENKNuSbFayWWItHsA9/zqIC/qCrPHUN70pbjeVH0RnYq82WIkKRzFlagW9Ta7UBuPnfA1JJoPr/I4jl9+P+Y6nUiKl96dwK57lEShYD3GbRRWXvgftrW1oQ5UxOMIBzfhrGQ459o4jkphi/k89W6ajuAH3yh+/WmZrhfbMJWMgD3f7jdHpvq7dqCqrgwrclJcGoXg5dYXVkddw0Np2eI6Tf7EGDb+GyddE6xGm5mn0m5MzNx4E8v3mzEwQSewXbamTUGdswvd/n0y4EvvNhvVusqIgVXkQFTRPEI6mCQ8YWCv2euKh2t70rRztSgFes3y2F7NYPXA==';
+
+        $WxToken = new WxToken($code);
+        var_dump($WxToken->get());
+        die;
+        return json([
+            'token' => $WxToken->get(),
+        ]);
+    }
 
 
     /**
