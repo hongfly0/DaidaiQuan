@@ -45,7 +45,7 @@ class FinancialController extends AdminBaseController
 
     public function addFinancial()
     {
-
+        return $this->fetch();
     }
 
     public function updateFinancial()
