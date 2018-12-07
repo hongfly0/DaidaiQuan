@@ -49,9 +49,6 @@ class UserController extends HomeBaseController
             return  $this->apifailed('缺少必要參數encryptedData');
         }
 
-        $iv = 'zwoNRIrvI9gbVPWYFYY5PQ==';
-        $encryptedData  = 'Db4QMxVEJTjE5icCzzWAoPxdMBozyWC/zvd89TeO1lGMqdxFZl3h6GRUk3BQNrW9SudNN1JbmP/Y4m6Yk/hnnaCTD30+RGfGTu3eRZfV+jWeGLFgUyTm6i7rwtHxhxInNpGmc4fs5+OyoTFHc3GxiKHvwIcjyQWunPkWLc1VJ5IF3555av+a+5LVPm2tr0EtaYDFkF3OjeK9C3RdTifM0X1wC0YtTyeKP38rWlbnR0H1DPwXEnLJbNaOo3fOdvSVMTFvINqqaRekgF3TvuAw1cSibh8k60WcTw+NMAiMfq0W7ReTZKKOULItSn0+2PqqC79EuXCf21hQlEzP3PU3zIt9dvpAo7WUOfAt+zwuC/aF1tkWmGOPxWGTOK8raRdKnOydSZ2G5w78xy8Cdri3e2u1h/2phSsPI2UzcaohzdElQ1NWqk785G2R0Y9lcWQkpWd+duqQ9fhAHExtjcccwA==';
-
         $WxToken = new WxToken($code);
 
         $memger_info = $WxToken->get();
