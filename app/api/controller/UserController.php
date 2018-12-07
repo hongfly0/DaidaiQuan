@@ -16,6 +16,7 @@ header('Access-Control-Allow-Methods:*');
 // 响应头设置
 header('Access-Control-Allow-Headers:x-requested-with,content-type');
 
+use app\api\Service\WXBizDataCrypt;
 use app\api\Service\WxToken;
 use app\portal\model\MemberModel;
 use app\portal\model\ProductModel;
@@ -31,20 +32,47 @@ class UserController extends HomeBaseController
     /**
      *
      */
-    public function getToken() {
+    public function getUserInfo() {
         $code = $this->request->param('code');
         $iv = $this->request->param('iv');
         $encryptedData = $this->request->param('encryptedData');
 
-        $iv = 'OaAQLo9e1o/cbEUG2E1Sag==';
-        $encryptedData  = 'RqdDzpIiCrHPr6vk5vVZWgdpxM64ayGrxHfUYPOkqlYo3P+FYNv45zZ/psptkQaJpX4D/jHzwfM/fRlotVlYTx3/G9hSz1z/JNv4WWzBcWIw3J+tQpQcJR4PRTPxb/1BaSaIt/5mx4XubENKNuSbFayWWItHsA9/zqIC/qCrPHUN70pbjeVH0RnYq82WIkKRzFlagW9Ta7UBuPnfA1JJoPr/I4jl9+P+Y6nUiKl96dwK57lEShYD3GbRRWXvgftrW1oQ5UxOMIBzfhrGQ459o4jkphi/k89W6ajuAH3yh+/WmZrhfbMJWMgD3f7jdHpvq7dqCqrgwrclJcGoXg5dYXVkddw0Np2eI6Tf7EGDb+GyddE6xGm5mn0m5MzNx4E8v3mzEwQSewXbamTUGdswvd/n0y4EvvNhvVusqIgVXkQFTRPEI6mCQ8YWCv2euKh2t70rRztSgFes3y2F7NYPXA==';
+        if(empty($code)){
+            return  $this->apifailed('缺少必要參數code');
+        }
+
+        if(empty($iv)){
+            return  $this->apifailed('缺少必要參數iv');
+        }
+
+        if(empty($encryptedData)){
+            return  $this->apifailed('缺少必要參數encryptedData');
+        }
+
+        $iv = 'zwoNRIrvI9gbVPWYFYY5PQ==';
+        $encryptedData  = 'Db4QMxVEJTjE5icCzzWAoPxdMBozyWC/zvd89TeO1lGMqdxFZl3h6GRUk3BQNrW9SudNN1JbmP/Y4m6Yk/hnnaCTD30+RGfGTu3eRZfV+jWeGLFgUyTm6i7rwtHxhxInNpGmc4fs5+OyoTFHc3GxiKHvwIcjyQWunPkWLc1VJ5IF3555av+a+5LVPm2tr0EtaYDFkF3OjeK9C3RdTifM0X1wC0YtTyeKP38rWlbnR0H1DPwXEnLJbNaOo3fOdvSVMTFvINqqaRekgF3TvuAw1cSibh8k60WcTw+NMAiMfq0W7ReTZKKOULItSn0+2PqqC79EuXCf21hQlEzP3PU3zIt9dvpAo7WUOfAt+zwuC/aF1tkWmGOPxWGTOK8raRdKnOydSZ2G5w78xy8Cdri3e2u1h/2phSsPI2UzcaohzdElQ1NWqk785G2R0Y9lcWQkpWd+duqQ9fhAHExtjcccwA==';
 
         $WxToken = new WxToken($code);
-        var_dump($WxToken->get());
-        die;
-        return json([
-            'token' => $WxToken->get(),
-        ]);
+
+        $memger_info = $WxToken->get();
+
+        $WXBizDataCrypt = New WXBizDataCrypt(config('app_id'),$memger_info->session_key);
+
+        $wx_user_info = $WXBizDataCrypt->decryptData($encryptedData,$iv,$data);
+
+        $wx_user_data = json_decode($wx_user_info);
+
+
+        $memger_info->member_name = $wx_user_data->nickName;
+        $memger_info->member_avatar_url = $wx_user_data->avatarUrl;
+        $memger_info->updated_at = date('Y-m-d H:i:s');
+        $memger_info->save();
+
+        $side_info = Db::table('ddq_option')->where('option_name','=','site_info')->find();
+        $memger_info->side_setting = json_decode($side_info['option_value']);
+        $memger_info->side_setting->site_customer_service_phone = config('site_customer_service_phone');
+
+        return $this->apisucces('用戶基本信息' ,$memger_info);
     }
 
 
@@ -64,7 +92,7 @@ class UserController extends HomeBaseController
             $side_info = Db::table('ddq_option')->where('option_name','=','site_info')->find();
 
             $info['side_setting'] = json_decode($side_info['option_value']);
-            $info['side_setting']->site_customer_service_phone = '111111';
+            $info['side_setting']->site_customer_service_phone = config('site_customer_service_phone');
 
             $this->apisucces('用户基本信息',$info);
         }

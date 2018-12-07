@@ -33,12 +33,14 @@ class WxToken extends Token {
         }
         //验证获取令牌是否成功
         if (array_key_exists('errcode', $wxResult)) {
-            throw new Exception([
+            return (array(
                 'errorCode' => $wxResult['errcode'],
                 'msg' => $wxResult['errmsg'],
-            ]);
+            ));
         } else {
-            return $this->grantToken($wxResult['openid']);
+            $member_info = $this->grantToken($wxResult['openid']);
+            $member_info->session_key = $wxResult['session_key'];
+            return $member_info;
         }
     }
     /**
@@ -50,15 +52,18 @@ class WxToken extends Token {
         if (!$user) {
             $uid = MemberModel::create([
                 'openid' => $openid,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
             ]);
         } else {
-            $uid = $user->id;
+            $uid = $user->member_id;
         }
         //存入缓存 key：生成返回客户端的令牌 value：openid + uid
-        $key = $this->generateToken($user->id);
+        $key = $this->generateToken($uid);
+        $user->wx_key = $key;
+        $user->updated_at = date('Y-m-d H:i:s');
+        $user->save();
 
-
-        
-        return array('key'=>$key,'user'=>$user);
+        return $user;
     }
 }
