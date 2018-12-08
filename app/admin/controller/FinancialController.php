@@ -48,9 +48,55 @@ class FinancialController extends AdminBaseController
         return $this->fetch();
     }
 
-    public function updateFinancial()
-    {
+    public function post_add_financial(){
+        $data = $_POST;
 
+        if(empty($data['ins_mobile'])){
+            return $this->apifailed('缺少必要参数:手机号');
+        }
+
+        //检查手机是否已被占用
+        $check_is_exit = Db::name('institutions')->where('ins_mobile',$data['ins_mobile'])->count();
+
+        $data['ins_login_passwod'] = cmf_password($data['ins_login_passwod']);
+        $data['create_at'] = date('Y-m-d H:i:s');
+        $data['create_at'] = date('Y-m-d H:i:s');
+
+        $res = Db::name('institutions')->insert($data);
+
+        if($res){
+            return $this->apisucces('添加成功');
+        }else{
+            return $this->apisucces('添加失败');
+        }
+    }
+
+    public function editFinancial()
+    {
+        $ins_id  = $_REQUEST['ins_id'];
+
+        $financial = Db::name('institutions')->where('ins_id',$ins_id)->find();
+
+        $this->assign('info',$financial);
+        return $this->fetch();
+    }
+
+    /**
+     * 保存金融机构信息
+     */
+    public function post_edit_financial(){
+        $data = $_POST;
+
+        $ins_id = $data['ins_id'];
+        unset($data['ins_id']);
+
+        $res = Db::name('institutions')->where('ins_id',$ins_id)->update($data);
+
+        if($res){
+            return $this->apisucces('更新成功');
+        }else{
+            return  $this->apisucces('更新成功');
+        }
     }
 
     public function delFinancial()
@@ -78,9 +124,9 @@ class FinancialController extends AdminBaseController
         if(!empty($post))
         {
             $info = Db::name('institutions')->where('ins_id = '.$post['id'])->find();
-           if (!empty($info) && $info['ins_login_passwod'] != md5('ddq123456'))
+           if (!empty($info) && $info['ins_login_passwod'] != cmf_password('ddq123456'))
            {
-               $res = Db::name('institutions')->where('ins_id = '.$post['id'])->data(array('ins_login_passwod' => md5('ddq123456')))->update();
+               $res = Db::name('institutions')->where('ins_id = '.$post['id'])->data(array('ins_login_passwod' => cmf_password('ddq123456')))->update();
                if ($res)
                {
                    $this->success("重置成功！", url("Financial/financialList"));
