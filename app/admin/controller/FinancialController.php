@@ -215,7 +215,7 @@ class FinancialController extends AdminBaseController
     }
 
     /**
-     * 保存金融机构信息
+     * 保存金融机构审核信息
      */
     public function post_review_financial(){
         $data = $_POST;

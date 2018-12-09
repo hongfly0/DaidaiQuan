@@ -72,7 +72,7 @@
 <body>
 <div class="wrap js-check-wrap">
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#A" data-toggle="tab">编辑产品</a></li>
+        <li class="active"><a href="{:url('agent/review')}">产品审核列表</a></li>
     </ul>
     <form class="form-horizontal js-ajax-form margin-top-20 layui-form" id="goodsform" role="form" action="return false"
           method="post">
@@ -82,172 +82,55 @@
                     <div class="tab-pane active" id="A">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">
-                                <span class="form-required">*</span>产品名称</label>
-                            <div class="col-md-6 col-sm-10">
-                                <input type="text" class="form-control" id="product_name" name="product_name"
-                                       lay-verify="required" value="{$product.product_name}">
+                                发布时间
+                            </label>
+                            <div class="col-md-6 col-sm-10" style="padding-top: 9px; ">
+                               {$product.create_at}
                             </div>
                         </div>
+                    </div>
+                    <div class="tab-pane active" >
+                        <div class="form-group">
+                            <div class="col-md-8 col-sm-12" style="padding: 9px;margin-left: 12%;border: 1px solid #eaeaea">
+                                {$product.product_detail}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane active">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">
-                                <span class="form-required">*</span>LOGO图片</label>
-
+                                <span class="form-required">*</span>商品编号:
                             </label>
-                            <div class="col-md-6 col-sm-10">
-                                <if condition="$product.product_image neq ''" >
-                                    <img class="avatar" id="img_upload1" src="{$product.product_image}"
-                                         data-agent_business_license_img="" style="float: left" data-product_image="{$product.product_image}">
-                                    <else>
-                                        <img class="avatar" id="img_upload1" src="__STATIC__/images/load_img.png"
-                                             data-agent_business_license_img="" style="float: left">
-                                    </else>
-                                </if>
+                            <div class="col-md-6 col-sm-10" style="padding-top: 9px; ">
+                                <input type="text" class="form-control" id="product_no"
+                                       name="product_no" lay-verify="required" >
                             </div>
                         </div>
+                    </div>
+                    <div class="tab-pane active">
                         <div class="form-group">
-                            <label class="col-sm-2 control-label"><span class="form-required">*</span>服务对象</label>
-                            <div class="col-md-6 col-sm-10" style="vertical-align: middle">
-                                <label><input type="radio" value="对公" lay-skin="primary"  name="service_object" checked="checked" title="对公"></label>
-                                &nbsp;&nbsp;
-                                <label><input type="radio" value="对公" lay-skin="primary"  name="service_object" title="对私"></label>
-                            </div>
-                        </div>
-
-                        <foreach name="types" item="vo" key="key">
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">
-                                    <if condition="$vo.is_required eq 1">
-                                        <span class="form-required">*</span>
-                                    </if>
-
-                                    <script>
-                                        var qt_en_name = '{$vo.qt_en_name}';
-                                        var qt_name = '{$vo.qt_name}';
-                                        var is_required = '{$vo.is_required}';
-
-                                        if(required_check.indexOf(qt_en_name)==-1){
-                                            required_check.push({'en_name':qt_en_name,'qt_name':qt_name,'is_required':is_required});
-                                        }
-                                    </script>
-
-                                    {$vo.qt_name}</label>
-                                <div class="col-md-6 col-sm-10" style="vertical-align: middle">
-                                    <foreach name="vo['values']" item="vi" >
-                                            <input type="checkbox" lay-skin="primary" value="{$vi.qv_id}" id="query_{$vi.qv_id}" class="query.{$vo.qt_en_name}" title="{$vi.qv_value}">
-                                    </foreach>
-                                </div>
-                            </div>
-                        </foreach>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label"><span class="form-required">*</span>所属单位</label>
-                            <div class="col-md-6 col-sm-10">
-                                <input type="text" class="form-control" id="company_name"
-                                       name="company_name" lay-verify="required" value="{$product.company_name}">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label"><span class="form-required">*</span>产品介绍</label>
-                            <div class="col-md-6 col-sm-10">
-                                <textarea id="product_detail" name="product_detail" style="display: none;" lay-verify="required">
-                                    {$product.product_detail}
-                                </textarea>
-
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">贷款对象</label>
-                            <div class="col-md-6 col-sm-10">
-                                <input type="text" class="form-control" id="loan_object"
-                                       name="loan_object" value="{$product.loan_object}">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">贷款用途</label>
-                            <div class="col-md-6 col-sm-10">
-                                <input type="text" class="form-control" id="loan_use_dor"
-                                       name="loan_use_dor" value="{$product.loan_use_dor}">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">贷款期限</label>
-                            <div class="col-md-6 col-sm-10">
-                                最高(<input type="text" class="layui-input" id="loan_time_limit"  name="loan_time_limit" value="{$product.loan_time_limit}" style="width: 100px;display: inline-block" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" maxlength="6" size="14"> )年
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">担保方式</label>
-                            <div class="col-md-6 col-sm-10">
-                                <input type="text" class="form-control" id="assure_means"
-                                       name="assure_means" value="{$product.assure_means}">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">贷款金额</label>
-                            <div class="col-md-6 col-sm-10">
-                                最高
-                                <input type="text" class="layui-input" id="loan_amount"  name="loan_amount" value="{$product.loan_amount}" style="width: 100px;display: inline-block" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" maxlength="9" size="14">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">利率</label>
-                            <div class="col-md-6 col-sm-10">
-                                低至<input type="text" class="layui-input" id="interest_rate"  name="interest_rate" value="{$product.interest_rate}" style="width: 100px;display: inline-block" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" maxlength="4" size="14">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">手续费</label>
-                            <div class="col-md-6 col-sm-10">
-                                最高<input type="text" class="layui-input" id="poundage"  name="poundage" value="{$product.poundage}" style="width: 100px;display: inline-block" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" maxlength="8" size="14">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label"><span class="form-required">*</span>必备条件</label>
-                            <div class="col-md-6 col-sm-10">
-                                <input type="text" class="form-control" lay-verify="required" value="{$product.must_conditions}" id="must_conditions" name="must_conditions">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">审核周期</label>
-                            <div class="col-md-6 col-sm-10">
-                                最高<input type="text" class="layui-input" id="audit_cycle"  name="audit_cycle" value="{$product.audit_cycle}" style="width: 100px;display: inline-block" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" maxlength="8" size="14">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">有效期止</label>
-                            <div class="col-md-6 col-sm-10">
-                                <input type="text" class="form-control" value="{$product.valid_time}" id="valid_time"
-                                       name="valid_time" style="width: 200px">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label"><span class="form-required">*</span>适用地区</label>
-                            <div class="col-md-6 col-sm-10">
-
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">备注</label>
-                            <div class="col-md-6 col-sm-10">
-                                <textarea name="" placeholder="请输入" name="product_remark" id="product_remark" class="layui-textarea">{$product.product_remark}</textarea>
+                            <label class="col-sm-2 control-label">
+                                发布区域:
+                            </label>
+                            <div class="col-md-6 col-sm-10" style="padding-top: 9px; ">
+                                <input type="checkbox" lay-skin="primary" value="1" id="set_top" name="set_top"  title="热门产品">
+                                <input type="checkbox" lay-skin="primary" value="1" id="set_hot" name="set_hot"  title="热门置顶">
                             </div>
                         </div>
                     </div>
                     <input type="hidden" name="product_id" value="{$product.product_id}" id="product_id">
-                    <button lay-submit lay-filter="*" type="button" class="layui-btn" id="submit_form"
-                            style="width: 30%;margin-top: 10px;margin-left: 20%">
-                        提交保存
+                    <button lay-filter="*" type="button" class="layui-btn"
+                            style="width: 20%;margin-top: 10px;margin-left: 10%" onclick="location.href='/Admin/goods/editGoods?product_id={$product.product_id}'">
+                        编辑内容
+                    </button>
+                    <button lay-submit lay-filter="*" type="button" class="layui-btn" class="submit_form"
+                            style="width: 20%;margin-top: 10px;margin-left: 5%" data-product_status="1">
+                        审核通过
+                    </button>
+
+                    <button lay-submit lay-filter="*" type="button" class="layui-btn" class="submit_form"
+                            style="width: 20%;margin-top: 10px;margin-left: 5%;background-color:#ff0000" data-product_status="5">
+                        审核不通过
                     </button>
 
                 </div>
@@ -261,103 +144,36 @@
 <script type="text/javascript" src="__STATIC__/addel/addel.jquery.js"></script>
 
 <script>
-
-    var  query_values = {$product_query};
-
-    query_values.forEach(function (value,index,array) {
-        $("#query_"+value.pv_id).attr("checked","true");
-    });
-
-    layui.use('upload', function () {
-        var upload = layui.upload;
-
-        //产品图片
-        var uploadInst1 = upload.render({
-            elem: '#upload1' //绑定元素
-            , url: "{:url('public/upload_img')}" //上传接口
-            , done: function (res) {
-                $("#img_upload1").attr('src', res.data.url);
-                $("#img_upload1").data('product_image', res.data.url);
-            }
-            , error: function () {
-                //请求异常回调
-            }
-        });
-    });
-
-    //到期日期
-    layui.use('laydate', function () {
-        var laydate = layui.laydate;
-
-        laydate.render({
-            elem: '#valid_time',
-            type: 'datetime'
-        });
-    });
-
-    layui.use('layedit', function(){
-        var layedit = layui.layedit;
-        layedit.set({
-            uploadImage: {
-                url: "{:url('public/Editupload_img')}" //接口url
-                ,type: 'post' //默认post
-            }
-        });
-
-        layedit.build('product_detail'); //建立编辑器
-    });
-
-
     layui.use('form', function () {
         var form = layui.form;
 
         form.on('submit(*)', function (data) {
-            var form = $("#goodsform").serializeArray();
 
-            var product_image = $("#img_upload1").data('product_image');
+            var product_id = $("#product_id").val(),
+                product_no = $("#product_no").val(),
+                set_top = $("input[name='set_top']:checked").val(),
+                set_hot = $("input[name='set_hot']:checked").val(),
+                product_status = $(this).data('product_status');
 
-            if(!product_image){
-                layer.msg('请上传产品图片');
-                return false;
-            }else{
-                form.push({'name':'product_image','value':product_image});
-            }
-
-            var check_box = true;
-            var check_box_msg = "";
-            required_check.forEach(function (value,index,array) {
-                var arr = new Array();
-                var key = 'query.'+value.en_name;
-                $("input:checkbox[class='"+key+"']:checked").each(function(i){
-                    arr[i] = $(this).val();
-                });
-
-                if(arr.length==0 && value.is_required==1){
-                    check_box_msg += value.qt_name+"必选项不能为空 <br>" ;
-                    check_box = false;
-                }
-
-                form.push({'name':'query_array_'+value.en_name,'values':arr});
-            });
-
-            if(check_box == false){
-                layer.msg(check_box_msg);
-                return false;
-            }
-
-            form.push({'name':'product_remark','value':$("#product_remark").val()});
+            var data = {
+                "product_id": product_id,
+                "product_no": product_no,
+                "set_top" : set_top,
+                "set_hot"  : set_hot,
+                "product_status" :product_status
+            };
 
             $.ajax({
-                url: "{:url('goods/post_save_goods')}",
+                url: "{:url('goods/post_review_goods')}",
                 type: "POST",
-                data: JSON.stringify(form),
+                data: data,
                 dataType: "JSON",
                 success: function (res) {
                     if (res.code != '1') {
                         layer.msg(res.msg);
                     } else {
                         layer.msg(res.msg);
-                        location.href="{:url('goods/goodslist')}";
+                        location.href="{:url('goods/review')}";
                     }
                 }
             });

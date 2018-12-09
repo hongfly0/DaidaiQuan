@@ -424,8 +424,31 @@ class GoodsController extends AdminBaseController{
         return $this->fetch();
     }
 
-    public function selectGoodsBrowseList()
-    {
+    /**
+     * 保存金融机构审核信息
+     */
+    public function post_review_goods(){
+        $data = $_POST;
 
+        $product_id = $data['product_id'];
+        unset($data['product_id']);
+
+        $check_no = Db::name('product')->where('product_no',$data['product_no'])->find();
+
+        if($check_no){
+            return  $this->apifailed($data['product_no'].'，产品编号已存在');
+        }
+
+        $data['update_at'] = date('Y-m-d H:i:s');
+        $data['audit_user_id'] = session('ADMIN_ID');
+        $data['audit_user_name'] = session('name');
+
+        $res = Db::name('product')->where('product_id',$product_id)->update($data);
+
+        if($res){
+            return $this->apisucces('操作成功');
+        }else{
+            return  $this->apisucces('操作失败');
+        }
     }
 }
