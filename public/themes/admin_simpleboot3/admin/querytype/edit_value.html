@@ -1,0 +1,98 @@
+<include file="public@header"/>
+</head>
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all">
+<style>
+
+</style>
+
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:url('Querytype/querytypeList')}">关键字列表</a></li>
+        <li><a href="{:url('Querytype/add_type')}">添加关键字类型</a></li>
+        <li><a href="{:url('Querytype/add_value')}">添加关键类型值</a></li>
+    </ul>
+    <form class="form-horizontal js-ajax-form margin-top-20 layui-form" role="form" action="return false"
+          method="post">
+        <fieldset>
+            <div class="tabbable">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="A">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span
+                                    class="form-required">*</span>关键字类型:</label>
+                            <div class="col-md-6 col-sm-10">
+                                <select name="qt_id" id="qt_id" lay-verify="required">
+                                    <option value="">--请选择关键字分类--</option>
+                                    <foreach name="types" item="vo" key="key">
+                                        <option value="{$vo.qt_id}" <if condition="$info.qt_id eq $vo.qt_id" >selected</if> >{$vo.qt_name}</option>
+                                    </foreach>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">
+                                <span class="form-required">*</span>关键字类值:</label>
+                            </label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" id="qv_value" lay-verify="required" name="qv_value" value="{$info.qv_value}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="qv_id" value="{$info.qv_id}" name="qv_id">
+                    <button lay-submit lay-filter="*" type="button" class="layui-btn" id="submit_form"
+                            style="width: 30%;margin-top: 10px;margin-left: 20%">
+                        提交保存
+                    </button>
+
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+<script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script type="text/javascript" src="__STATIC__/layer/layer.js"></script>
+<script type="text/javascript" src="__STATIC__/addel/addel.jquery.js"></script>
+
+<script>
+
+    layui.use('form', function () {
+        var form = layui.form;
+
+        form.on('submit(*)', function (data) {
+            var qt_id = $("#qt_id").val(),
+                qv_id = $("#qv_id").val(),
+                qv_value = $("#qv_value").val();
+
+            var data = {
+                "qt_id": qt_id,
+                "qv_value": qv_value,
+                "qv_id" : qv_id
+            };
+
+            $.ajax({
+                url: "{:url('Querytype/post_edit_value')}",
+                type: "POST",
+                data: data,
+                dataType: "JSON",
+                success: function (res) {
+                    if (res.code != '1') {
+                        layer.msg(res.msg);
+                    } else {
+                        layer.msg(res.msg);
+                        location.href="{:url('Querytype/querytypeList')}";
+                    }
+                }
+            });
+
+            return false;
+
+        });
+    });
+
+</script>
+</body>
+</html>

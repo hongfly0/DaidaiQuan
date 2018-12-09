@@ -1,0 +1,116 @@
+<include file="public@header"/>
+</head>
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all">
+<style>
+
+</style>
+
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:url('Querytype/querytypeList')}">关键字列表</a></li>
+        <li><a href="{:url('Querytype/add_type')}">添加关键字类型</a></li>
+        <li><a href="{:url('Querytype/add_value')}">添加关键类型值</a></li>
+    </ul>
+    <form class="form-horizontal js-ajax-form margin-top-20 layui-form" role="form" action="return false"
+          method="post">
+        <fieldset>
+            <div class="tabbable">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="A">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span
+                                    class="form-required">*</span>分类英文名:</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" id="qt_en_name" disabled name="qt_en_name"
+                                       lay-verify="required"
+                                       value="{$info.qt_en_name}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">
+                                <span class="form-required">*</span>分类中文名:</label>
+                            </label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" id="qt_name" lay-verify="required" name="qt_name" value="{$info.qt_name}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">是否必填:</label>
+                            <div class="col-md-6 col-sm-10">
+                                <select lay-ignore name="is_required" id="is_required" style="height: 25px;line-height: 25px;width: 100px">
+                                    <option value="0" <if condition="$info.is_required eq 0">selected</if> >否</option>
+                                    <option value="1" <if condition="$info.is_required eq 1">selected</if> >是</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">排序:</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" id="qt_sort"
+                                       name="qt_sort" value="{$info.qt_sort}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" value="{$info.qt_id}" name="qt_id" id="qt_id">
+
+                    <button lay-submit lay-filter="*" type="button" class="layui-btn" id="submit_form"
+                            style="width: 30%;margin-top: 10px;margin-left: 20%">
+                        提交保存
+                    </button>
+
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+<script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script type="text/javascript" src="__STATIC__/layer/layer.js"></script>
+<script type="text/javascript" src="__STATIC__/addel/addel.jquery.js"></script>
+
+<script>
+
+    layui.use('form', function () {
+        var form = layui.form;
+
+        form.on('submit(*)', function (data) {
+            var qt_id = $("#qt_id").val(),
+                qt_en_name = $("#qt_en_name").val(),
+                qt_name = $("#qt_name").val(),
+                is_required = $("#is_required").val(),
+                qt_sort = $("#qt_sort").val();
+
+            var data = {
+                "qt_id" :qt_id,
+                "qt_en_name": qt_en_name,
+                "qt_name": qt_name,
+                "is_required": is_required,
+                "qt_sort": qt_sort
+            };
+
+            $.ajax({
+                url: "{:url('Querytype/post_edit_type')}",
+                type: "POST",
+                data: data,
+                dataType: "JSON",
+                success: function (res) {
+                    if (res.code != '1') {
+                        layer.msg(res.msg);
+                    } else {
+                        layer.msg(res.msg);
+                        location.href="{:url('Querytype/querytypeList')}";
+                    }
+                }
+            });
+
+            return false;
+
+        });
+    });
+
+</script>
+</body>
+</html>

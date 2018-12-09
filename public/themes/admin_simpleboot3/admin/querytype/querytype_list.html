@@ -1,0 +1,125 @@
+<include file="public@header" />
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="{:url('Querytype/querytypeList')}">关键字列表</a></li>
+        <li><a href="{:url('Querytype/add_type')}">添加关键字类型</a></li>
+        <li><a href="{:url('Querytype/add_value')}">添加关键类型值</a></li>
+    </ul>
+    <form class="js-ajax-form" action="{:url('Menu/listOrder')}" method="post">
+        <div class="table-actions">
+            <button class="btn btn-primary btn-sm js-ajax-submit" type="submit">{:lang('SORT')}</button>
+        </div>
+        <table class="table table-hover table-bordered table-list" id="menus-table">
+            <thead>
+            <tr>
+                <th width="80">ID</th>
+                <th width="50">分类英文名</th>
+                <th>分类中文名称</th>
+                <th>是否必填</th>
+                <th width="180">{:lang('ACTIONS')}</th>
+            </tr>
+            </thead>
+            <tbody>
+             <foreach name="infos" item="vo" key="key">
+                <tr>
+                    <td>{$key+1}</td>
+                    <td>{$vo.qt_en_name}</td>
+                    <td>{$vo.qt_name}</td>
+                    <td>
+                        <if condition="$vo.is_required eq 0">
+                                否
+                            <else>
+                                是
+                            </else>
+                        </if>
+                    </td>
+                    <td>
+                        <font color="#cccccc"><a href="/Admin/querytype/add_value?qt_id={$vo.qt_id}">添加类型值</a></font>
+                        <font color="#cccccc"><a href="/Admin/querytype/edit_type?qt_id={$vo.qt_id}">编辑</a></font>
+                        <font color="#cccccc"><a href="javascript:void(0)" onclick="del_query_type({$vo.qt_id})">删除</a></font>
+                        <foreach name="$vo.child_values" item="row" key="rkey">
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>└─&nbsp;&nbsp;{$row.qv_value}</td>
+                                <td></td>
+                                <td>
+                                    <font color="#cccccc"><a href="/Admin/querytype/edit_value?qv_id={$row.qv_id}">编辑</a></font>
+                                    <font color="#cccccc"><a href="javascript:void(0)" onclick="del_query_value({$row.qv_id})">删除</a></font>
+                                </td>
+                            </tr>
+                        </foreach>
+                    </td>
+                </tr>
+             </foreach>
+            </tbody>
+        </table>
+        <div class="table-actions">
+            <button class="btn btn-primary btn-sm js-ajax-submit" type="submit">{:lang('SORT')}</button>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script type="text/javascript" src="__STATIC__/layer/layer.js"></script>
+<script type="text/javascript" src="__STATIC__/addel/addel.jquery.js"></script>
+<script>
+    $(document).ready(function() {
+        Wind.css('treeTable');
+        Wind.use('treeTable', function() {
+            $("#menus-table").treeTable({
+                indent : 20
+            });
+        });
+    });
+    
+    function del_query_type(qt_id) {
+        layer.confirm('确定要删除吗？', {
+            btn: ['删除','取消'] //按钮
+        }, function(){
+            $.ajax({
+                url: "{:url('Querytype/del_type')}",
+                type: "POST",
+                data: {"qt_id":qt_id},
+                dataType: "JSON",
+                success: function (res) {
+                    if(res.code == 1){
+                        layer.msg(res.msg, {icon: 1});
+                        location.href="{:url('Querytype/querytypeList')}";
+                    }else{
+                        layer.msg(res.msg, {icon: 2});
+                    }
+                }
+            });
+        }, function(){
+            layer.close();
+        });
+    }
+
+    function del_query_value(qv_id) {
+        layer.confirm('确定要删除吗？', {
+            btn: ['删除','取消'] //按钮
+        }, function(){
+            $.ajax({
+                url: "{:url('Querytype/del_value')}",
+                type: "POST",
+                data: {"qv_id":qv_id},
+                dataType: "JSON",
+                success: function (res) {
+                    if(res.code == 1){
+                        layer.msg(res.msg, {icon: 1});
+                        location.href="{:url('Querytype/querytypeList')}";
+                    }else{
+                        layer.msg(res.msg, {icon: 2});
+                    }
+                }
+            });
+        }, function(){
+            layer.close();
+        });
+    }
+</script>
+</body>
+</html>

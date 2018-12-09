@@ -38,6 +38,7 @@ class MenuController extends AdminBaseController
         if (!empty($content)) {
             return $content;
         }
+        //QuerytypeController
 
         session('admin_menu_index', 'Menu/index');
         $result     = Db::name('AdminMenu')->order(["list_order" => "ASC"])->select()->toArray();
@@ -71,6 +72,7 @@ class MenuController extends AdminBaseController
                         <td>\$status</td>
                         <td>\$str_manage</td>
                     </tr>";
+
         $category = $tree->getTree(0, $str);
         $this->assign("category", $category);
         return $this->fetch();
