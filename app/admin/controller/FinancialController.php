@@ -38,6 +38,7 @@ class FinancialController extends AdminBaseController
         // 获取分页显示
         $page = $agent->render();
 
+        $this->assign("key_word",$key_word);
         $this->assign("page", $page);
         $this->assign("ins", $agent);
         return $this->fetch();
@@ -139,4 +140,33 @@ class FinancialController extends AdminBaseController
         }
     }
 
+    /*
+     * 暂停
+     */
+    public function pause_fiancial(){
+        if(empty($_REQUEST['ins_id'])){
+            return  $this->apifailed('缺少必要参数:金融机构id');
+        }
+
+        $ins_id = $_REQUEST['ins_id'];
+
+        $ins_status  = Db::name('institutions')->where('ins_id',$ins_id)->value('ins_status');
+
+        if($ins_status==3){
+            $update_ins_status = 1;
+        }elseif ($ins_status == 1){
+            $update_ins_status = 3;
+        }else{
+            $this->apifailed('当前状态不允许修改');
+            return  false;
+        }
+
+        $res = Db::name('institutions')->where('ins_id',$ins_id)->update(array('ins_status'=>$update_ins_status));
+
+        if($res){
+            return $this->apisucces('更改成功',array('ins_status'=>$update_ins_status));
+        }else{
+            return $this->apifailed('更改失败');
+        }
+    }
 }

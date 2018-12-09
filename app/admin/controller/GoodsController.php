@@ -218,7 +218,7 @@ class GoodsController extends AdminBaseController{
     }
 
     /*
-     * 刷新产品
+     * 暂停
      */
     public function pause_product(){
         if(empty($_REQUEST['product_id'])){
@@ -242,7 +242,7 @@ class GoodsController extends AdminBaseController{
         if($res){
             return $this->apisucces('更改成功',array('product_status'=>$update_product_status));
         }else{
-            return $this->apifailed('刷新失败');
+            return $this->apifailed('更改失败');
         }
     }
 

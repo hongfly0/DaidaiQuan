@@ -7,9 +7,8 @@
     </ul>
     <form class="well form-inline margin-top-20" method="post" action="{:url('financial/financialList')}">
         查找
-        <input type="text" class="form-control" name="key_word" style="width: 120px;" value="{:input('request.user_login/s','')}" placeholder="请输入手机号">
+        <input type="text" class="form-control" name="key_word" style="width: 180px;" value="{$key_word}" placeholder="请输入手机号" >
         <input type="submit" class="btn btn-primary" value="搜索" />
-        <a class="btn btn-danger" href="{:url('Financial/addFinancial')}">添加金融机构</a>
     </form>
     <table class="table table-hover table-bordered">
         <thead>
@@ -41,7 +40,7 @@
                 <td></td>
                 <td><a href="{$vo.ins_business_license}" >图</a></td>
                 <td>
-                    <if condition="$vo['ins_status'] eq 1">
+                    <if condition="($vo['ins_status'] eq 1) OR ($vo['ins_status'] eq 3) ">
                         是
                         <else />
                         否
@@ -49,7 +48,14 @@
                 </td>
                 <td>
                     <font color="#cccccc"><a class="js-ajax-delete" href="{:url('financial/delFinancial',array('id'=>$vo['ins_id']))}">{:lang('DELETE')}</a></font>
-                    <font color="#cccccc"><a href="">暂停</a></font>
+                    <font color="#cccccc"><a href="javascript:void(0)" id="status_{$vo.ins_id}" onclick="pause_ins(this,{$vo.ins_id})">
+                        <if condition="$vo.ins_status eq 1">
+                            暂停
+                            <else>
+                                发布
+                            </else>
+                        </if>
+                    </a></font>
                     <font color="#cccccc"><a href="/Admin/financial/editfinancial?ins_id={$vo.ins_id}">编辑</a></font>
                     <font color="#cccccc"><a class="js-ajax-reset" href="{:url('financial/resetFinancialPassWord',array('id'=>$vo['ins_id']))}">密码重置</a></font>
                 </td>
@@ -60,5 +66,33 @@
     <div class="pagination">{$page}</div>
 </div>
 <script src="__STATIC__/js/admin.js"></script>
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script type="text/javascript" src="__STATIC__/layer/layer.js"></script>
+<script>
+    function pause_ins(e,id) {
+        $.ajax({
+            url: "{:url('Financial/pause_fiancial')}",
+            type: "POST",
+            data: {"ins_id":id},
+            dataType: "JSON",
+            success: function (res) {
+                layer.msg(res.msg);
+                if(res.code==1){
+                    var process_status = res.data.ins_status;
+                    var show_str = "发布";
+                    var btn_str = "暂停";
+
+                    if(process_status == 3){
+                        show_str = "暂停";
+                        btn_str = "发布";
+                    }
+
+                    $("#status_"+id).text(show_str);
+                    $(e).text(btn_str);
+                }
+            }
+        });
+    }
+</script>
 </body>
 </html>
