@@ -1,0 +1,137 @@
+<include file="public@header" />
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="{:url('agent/review')}">产品审核列表</a></li>
+    </ul>
+    <form class="well form-inline margin-top-20" method="post" action="{:url('goods/review')}">
+        查找
+        <input type="text" class="form-control" name="key_word" style="width: 30%;" value="{:input('request.user_login/s','')}" placeholder="请输入产品名称">
+        <input type="submit" class="btn btn-primary" value="搜索" />
+    </form>
+    <table class="table table-hover table-bordered">
+        <thead>
+        <tr>
+            <th width="50">ID</th>
+            <th>产品编号</th>
+            <th>服务对象</th>
+            <th>产品类型</th>
+            <th>产品名称</th>
+            <th>还款方式</th>
+            <th>利率</th>
+            <th>发布时间</th>
+            <th>有效期止</th>
+            <th>联系方式</th>
+            <th>审批周期</th>
+            <th>状态</th>
+            <th width="130">{:lang('ACTIONS')}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <php>$user_statuses=array("0"=>lang('USER_STATUS_BLOCKED'),"1"=>lang('USER_STATUS_ACTIVATED'),"2"=>lang('USER_STATUS_UNVERIFIED'));</php>
+        <foreach name="products" item="vo" key="key">
+            <tr>
+                <td>{$key+1}</td>
+                <td>{$vo.product_no}</td>
+                <td>{$vo.service_object}</td>
+                <td>
+                    <if condition="!empty($vo['product_type'])">
+                        {$vo.product_type}
+                    </if>
+                </td>
+                <td>{$vo.product_name}</td>
+                <td>
+                    <if condition="!empty($vo['refund_type'])">
+                        {$vo.refund_type}
+                    </if>
+                </td>
+                <td>{$vo.poundage}</td>
+                <td>{$vo.create_at}</td>
+                <td>{$vo.valid_time}</td>
+                <td>{$vo.product_contact}</td>
+                <td>{$vo.audit_cycle}</td>
+                <td id="status_{$vo.product_id}">
+                    <php>
+                        $status_mapping = array(1=>'发布中',2=>'暂停',3=>'已过期',4=>'待审核');
+                        echo $status_mapping[$vo['product_status']];
+                    </php>
+                </td>
+                <td width="180px">
+                    <font color="#cccccc"><a href="/Admin/goods/review_show?product_id={$vo.product_id}">审核</a></font>
+                </td>
+            </tr>
+        </foreach>
+        </tbody>
+    </table>
+    <div class="pagination">{$page}</div>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script type="text/javascript" src="__STATIC__/layer/layer.js"></script>
+<script>
+    function refresh_product(id) {
+        $.ajax({
+            url: "{:url('goods/refresh_product')}",
+            type: "POST",
+            data: {"product_id":id},
+            dataType: "JSON",
+            success: function (res) {
+                layer.msg(res.msg);
+            }
+        });
+    }
+
+    function pause_product(e,id) {
+        $.ajax({
+            url: "{:url('goods/pause_product')}",
+            type: "POST",
+            data: {"product_id":id},
+            dataType: "JSON",
+            success: function (res) {
+                layer.msg(res.msg);
+                if(res.code==1){
+                    var process_status = res.data.product_status;
+                    var show_str = "发布中";
+                    var btn_str = "暂停";
+
+                    if(process_status == 2){
+                        show_str = "暂停";
+                        btn_str = "发布";
+                    }
+
+                    $("#status_"+id).html(show_str);
+                    $(e).text(btn_str);
+                }
+            }
+        });
+    }
+
+    /**
+     * 删除产品
+     */
+    function del_product(product_id) {
+        layer.confirm('确定要删除吗？', {
+            btn: ['删除','取消'] //按钮
+        }, function(){
+            $.ajax({
+                url: "{:url('goods/delGoods')}",
+                type: "POST",
+                data: {"product_id":product_id},
+                dataType: "JSON",
+                success: function (res) {
+                    if(res.code == 1){
+                        layer.msg(res.msg, {icon: 1});
+                        location.href="{:url('goods/goodsList')}";
+                    }else{
+                        layer.msg(res.msg, {icon: 2});
+                    }
+                }
+            });
+        }, function(){
+            layer.close();
+        });
+    }
+</script>
+</body>
+</html>

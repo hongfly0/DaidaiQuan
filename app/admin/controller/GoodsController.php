@@ -350,14 +350,78 @@ class GoodsController extends AdminBaseController{
     }
 
 
-    public function updateGoodsBrowse()
+    public function review()
     {
+        $where = '1=1';
 
+        /**搜索条件**/
+        $key_word = $this->request->param('key_word');
+
+        if ($key_word) {
+            $where .= " and `product_name` like '%". $key_word ."%'";
+        }
+
+        $products = Db::name('product')
+            ->where($where)
+            ->whereIn('product_status',array('4'))
+            ->order("product_id DESC")
+            ->paginate(20);
+        // 获取分页显示
+        $page = $products->render();
+
+        $result= array();
+
+        foreach ($products as &$val){
+            $product_query = Db::name('product_query')->where('product_id',$val['product_id'])->select()->toArray();
+
+            foreach ($product_query as $row){
+                $val[$row['pt_en_name']] = $row['pv_value'];
+            }
+            $result[]= $val;
+        }
+
+        $this->assign("page", $page);
+        $this->assign("products", $result);
+        return $this->fetch();
     }
 
-    public function selectGoodsCollectionList()
+    public function review_show()
     {
+        $content = hook_one('admin_setting_site_view');
 
+        $product_id = $_REQUEST['product_id'];
+
+        if (!empty($content)) {
+            return $content;
+        }
+
+        //获取需要填的项目
+        $types = Db::name('query_type')->order('qt_sort')->select()->toArray();
+
+        $values = Db::name('query_value')->order('qv_sort')->select()->toArray();
+
+        $new_values = array();
+
+        foreach ($values as $row){
+            $new_values[$row['qt_id']][] = $row;
+        }
+
+        $new_types = array();
+
+        foreach ($types as $trows){
+            $trows['values'] = $new_values[$trows['qt_id']];
+
+            $new_types[] = $trows;
+        }
+
+        $product_info = Db::name('product')->where('product_id',$product_id)->find();
+        $product_query = Db::name('product_query')->where('product_id',$product_id)->select()->toArray();
+
+        $this->assign('product',$product_info);
+        $this->assign('product_query',json_encode($product_query));
+        $this->assign("types", $new_types);
+
+        return $this->fetch();
     }
 
     public function selectGoodsBrowseList()

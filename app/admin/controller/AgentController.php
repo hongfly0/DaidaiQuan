@@ -213,7 +213,7 @@ class AgentController extends AdminBaseController
 
             if(!$insert_res){
                 Db::rollback();
-                return $this->apifailed('更新失败1');
+                return $this->apifailed('更新失败');
             }
 
             Db::commit();
@@ -221,7 +221,128 @@ class AgentController extends AdminBaseController
             return $this->apisucces('更新成功');
         }else{
             Db::rollback();
-            return $this->apifailed('更新失败2');
+            return $this->apifailed('更新失败');
+        }
+    }
+
+    /**
+     * 显示待审核列表
+     */
+    public function review(){
+        $content = hook_one('admin_user_index_view');
+
+        if (!empty($content)) {
+            return $content;
+        }
+
+        $where = 'agent_status = 0 ';
+
+        /**搜索条件**/
+        $key_word = $this->request->param('key_word');
+
+        if ($key_word) {
+            $where .= " and `agent_mobile` like '%". $key_word ."%'";
+        }
+
+        $agent = Db::name('agent')
+            ->where($where)
+            ->order("agent_id DESC")
+            ->paginate(20);
+        // 获取分页显示
+        $page = $agent->render();
+
+        $this->assign("page", $page);
+        $this->assign("agent", $agent);
+        return $this->fetch();
+    }
+
+
+    /**
+     * 显示审核页面
+     */
+    public function review_show(){
+        $agent_id = $_REQUEST['agent_id'];
+
+        $agent = Db::name('agent')->where('agent_id',$agent_id)->find();
+
+        $agent_product = Db::name('agent_product')->where('agent_id',$agent_id)->select()->toArray();
+
+        $this->assign('agent_product',$agent_product);
+        $this->assign("agent", $agent);
+        return $this->fetch();
+    }
+
+    /**
+     *提交审核结果
+     */
+    public function post_edit_agent_review(){
+        $data = $_POST;
+
+        $product_nums = $data['product_nums'];
+        $agent_id = $data['agent_id'];
+        unset($data['agent_id']);
+
+        $product_infos = array();
+
+        //检测产品是否存在
+        if($product_nums){
+            $product_infos = Db::name('product')->whereIn('product_no',$product_nums)->field('product_id,product_no')->select()->toArray();
+
+            $product_array = array_column($product_infos,'product_no');
+
+            $missing_msg = "";
+
+            foreach ($product_nums as $val){
+                if(!in_array($val,$product_array)){
+                    $missing_msg .= " 产品编号:".$val."不存在;<br>";
+                }
+            }
+
+            if(!empty($missing_msg)){
+                return  $this->apifailed($missing_msg,array(),'-1');
+            }
+        }
+
+        Db::startTrans();
+
+        unset($data['product_nums']);
+
+        $data['audit_time'] = date('Y-m-d H:i:s');
+        $data['audit_time'] = date('Y-m-d H:i:s');
+        $data['audit_user_id'] = session('ADMIN_ID');
+        $data['audit_user_name'] = session('name');
+
+        $agent = Db::table('ddq_agent')->where('agent_id',$agent_id)->update($data);
+
+        if($agent){
+            $insert_array_batch =  array();
+            foreach ($product_infos as $row) {
+                $insert_array = array();
+
+                $insert_array['product_id']  = $row['product_id'];
+                $insert_array['product_no'] = $row['product_no'] ;
+                $insert_array['create_at'] = date('Y-m-d H:i:s');
+                $insert_array['update_at'] = date('Y-m-d H:i:s');
+                $insert_array['agent_id']  = $agent_id;
+
+                $insert_array_batch[] = $insert_array;
+            }
+
+            $del_res = Db::name('agent_product') ->where('agent_id',$agent_id)->delete();
+
+            $insert_res = Db::table('ddq_agent_product')->insertAll($insert_array_batch);
+
+            if(!$insert_res){
+                Db::rollback();
+                return $this->apifailed('操作失败');
+            }
+
+            Db::commit();
+
+            return $this->apisucces('操作成功');
+        }else{
+            Db::rollback();
+            return $this->apifailed('操作失败');
         }
     }
 

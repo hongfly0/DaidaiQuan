@@ -1,0 +1,285 @@
+<include file="public@header"/>
+</head>
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all">
+<style>
+    #app {
+        width: 1265px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        font-family: "Source Sans Pro", Calibri, Candara, Arial, sans-serif;
+    }
+
+    .add-product {
+        display: flex;
+        align-items: center;
+    }
+
+    .add-product .el-tag {
+        margin-right: 20px;
+    }
+
+    /* 上传图片相关 */
+    .upload-img {
+        display: flex;
+        list-style: none;
+    }
+
+    .upload-img li + li {
+        margin-left: 20px;
+    }
+
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .avatar-uploader .el-upload:hover {
+        border-color: #409EFF;
+    }
+
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
+    }
+
+    .avatar {
+        width: 178px;
+        height: 178px;
+        display: block;
+    }
+
+    .layui-btn {
+        width: 100%;
+    }
+</style>
+
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:url('agent/review')}">金融机构待审核列表</a></li>
+    </ul>
+    <form class="form-horizontal js-ajax-form margin-top-20 layui-form" role="form" action="return false"
+          method="post">
+        <fieldset>
+            <div class="tabbable">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="A">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span
+                                    class="form-required">*</span>单位名称:</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" id="ins_name" disabled name="ins_name"
+                                       lay-verify="required"
+                                       value="{$info.ins_name}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">
+                                <span class="form-required">*</span>法人代表:</label>
+                            </label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" id="ins_company_owner" disabled lay-verify="required" name="ins_company_owner" value="{$info.ins_company_owner}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">联系人:</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" disabled id="ins_contacter"
+                                       name="ins_contacter"  value="{$info.ins_contacter}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">
+                                <span class="form-required">*</span>公司电话:</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" disabled id="ins_company_phone"
+                                       name="ins_company_phone" lay-verify="required"
+                                       value="{$info.ins_company_phone}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">地址:</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" disabled id="ins_company_address"
+                                       name="ins_company_address"  value="{$info.ins_company_address}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span
+                                    class="form-required">*</span>手机号(登陆账号):</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control layui-input" lay-verify="required" id="ins_mobile"
+                                       name="ins_mobile" value="{$info.ins_mobile}" disabled="disabled">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">到期时间:</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control layui-input" id="ins_due_time"
+                                       name="ins_due_time" value="{$info.ins_due_time}">
+                            </div>
+                        </div>
+                        <div id="app" style="padding-left: 10%">
+                            <ul class="upload-img">
+                                <li>
+                                    <p style="font-weight: bold">营业执照</p>
+                                    <if condition="$info.ins_business_license neq ''">
+                                        <img class="avatar" id="img_upload1" src="{$info.ins_business_license}" data-agent_business_license_img="{$info.ins_business_license}">
+                                        <else>
+                                            <img class="avatar" id="img_upload1" src="__STATIC__/images/load_img.png" data-agent_business_license_img="">
+                                        </else>
+                                    </if>
+                                </li>
+                                <li>
+                                    <p style="font-weight: bold">经办人身份证正面</p>
+                                    <if condition="$info.ins_agent_idcard_postitive neq ''">
+                                        <img class="avatar" id="img_upload2" src="{$info.ins_agent_idcard_postitive}" data-agent_business_license_img="{$info.ins_agent_idcard_postitive}">
+                                        <else>
+                                            <img class="avatar" id="img_upload2" src="__STATIC__/images/load_img.png" data-agent_business_license_img="">
+                                        </else>
+                                    </if>
+                                </li>
+                                <li>
+                                    <p style="font-weight: bold">经办人身份证反面</p>
+                                    <if condition="$info.ins_agent_idcard_back neq ''">
+                                        <img class="avatar" id="img_upload3" src="{$info.ins_agent_idcard_back}" data-agent_business_license_img="{$info.ins_agent_idcard_postitive}">
+                                        <else>
+                                            <img class="avatar" id="img_upload3" src="__STATIC__/images/load_img.png" data-agent_business_license_img="">
+                                        </else>
+                                    </if>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    <input type="hidden" id="ins_id" name="ins_id" value="{$info.ins_id}">
+                    <button lay-submit lay-filter="*" type="button" class="layui-btn" class="submit_form"
+                            style="width: 20%;margin-top: 10px;margin-left: 20%" data-ins_status="1">
+                        审核通过
+                    </button>
+
+                    <button lay-submit lay-filter="*" type="button" class="layui-btn" class="submit_form"
+                            style="width: 20%;margin-top: 10px;margin-left: 5%;background-color:#ff0000" data-ins_status="2">
+                        审核不通过
+                    </button>
+
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+<script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script type="text/javascript" src="__STATIC__/layer/layer.js"></script>
+<script type="text/javascript" src="__STATIC__/addel/addel.jquery.js"></script>
+
+<script>
+    $('.addel-container').addel({
+
+
+    });
+
+    layui.use('upload', function () {
+        var upload = layui.upload;
+
+        //营业执照
+        var uploadInst1 = upload.render({
+            elem: '#upload1' //绑定元素
+            , url: '/admin/public/upload_img' //上传接口
+            , done: function (res) {
+                $("#img_upload1").attr('src', res.data.url);
+                $("#img_upload1").data('ins_business_license', res.data.url);
+            }
+            , error: function () {
+                //请求异常回调
+            }
+        });
+
+        //身份证正面
+        var uploadInst2 = upload.render({
+            elem: '#upload2' //绑定元素
+            , url: '/admin/public/upload_img' //上传接口
+            , done: function (res) {
+                $("#img_upload2").attr('src', res.data.url);
+                $("#img_upload2").data('ins_agent_idcard_postitive', res.data.url);
+            }
+            , error: function () {
+                //请求异常回调
+            }
+        });
+
+        //身份证反面
+        var uploadInst3 = upload.render({
+            elem: '#upload3' //绑定元素
+            , url: '/admin/public/upload_img' //上传接口
+            , done: function (res) {
+                $("#img_upload3").attr('src', res.data.url);
+                $("#img_upload3").data('ins_agent_idcard_back', res.data.url);
+            }
+            , error: function () {
+                //请求异常回调
+            }
+        });
+    });
+
+    //到期日期
+    layui.use('laydate', function () {
+        var laydate = layui.laydate;
+
+        laydate.render({
+            elem: '#ins_due_time',
+            type: 'datetime'
+        });
+    });
+
+
+    layui.use('form', function () {
+        var form = layui.form;
+
+        form.on('submit(*)', function (data) {
+            var ins_id = $("#ins_id").val(),
+                ins_due_time = $("#ins_due_time").val(),
+                ins_status = $(this).data('ins_status');
+
+            var data = {
+                "ins_id" : ins_id,
+                "ins_due_time": ins_due_time,
+                "ins_status": ins_status
+            };
+
+            $.ajax({
+                url: "{:url('Financial/post_review_financial')}",
+                type: "POST",
+                data: data,
+                dataType: "JSON",
+                success: function (res) {
+                    if (res.code != '1') {
+                        layer.msg(res.msg);
+                    } else {
+                        layer.msg(res.msg);
+                        location.href="{:url('Financial/review')}";
+                    }
+                }
+            });
+
+            return false;
+
+        });
+    });
+    
+    function checkProduct(product_num) {
+        console.log(product_num);
+    }
+
+</script>
+</body>
+</html>

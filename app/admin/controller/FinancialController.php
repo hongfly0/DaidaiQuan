@@ -96,7 +96,7 @@ class FinancialController extends AdminBaseController
         if($res){
             return $this->apisucces('更新成功');
         }else{
-            return  $this->apisucces('更新成功');
+            return  $this->apifailed('更新失败');
         }
     }
 
@@ -167,6 +167,72 @@ class FinancialController extends AdminBaseController
             return $this->apisucces('更改成功',array('ins_status'=>$update_ins_status));
         }else{
             return $this->apifailed('更改失败');
+        }
+    }
+
+    /**
+     * 显示待审核列表
+     */
+    public function review(){
+        $content = hook_one('admin_user_index_view');
+
+        if (!empty($content)) {
+            return $content;
+        }
+
+        $where = 'ins_status=0';
+
+        /**搜索条件**/
+        $key_word = $this->request->param('key_word');
+
+        if ($key_word) {
+            $where .= " and `ins_mobile` like '%". $key_word ."%'";
+        }
+
+        $agent = Db::name('institutions')
+            ->where($where)
+            ->order("ins_id DESC")
+            ->paginate(20);
+        // 获取分页显示
+        $page = $agent->render();
+
+        $this->assign("key_word",$key_word);
+        $this->assign("page", $page);
+        $this->assign("ins", $agent);
+        return $this->fetch();
+    }
+
+    /**
+     * 显示审核界面
+     */
+    public function review_show(){
+        $ins_id  = $_REQUEST['ins_id'];
+
+        $financial = Db::name('institutions')->where('ins_id',$ins_id)->find();
+
+        $this->assign('info',$financial);
+        return $this->fetch();
+    }
+
+    /**
+     * 保存金融机构信息
+     */
+    public function post_review_financial(){
+        $data = $_POST;
+
+        $ins_id = $data['ins_id'];
+        unset($data['ins_id']);
+
+        $data['update_at'] = date('Y-m-d H:i:s');
+        $data['audit_user_id'] = session('ADMIN_ID');
+        $data['audit_user_name'] = session('name');
+
+        $res = Db::name('institutions')->where('ins_id',$ins_id)->update($data);
+
+        if($res){
+            return $this->apisucces('操作成功');
+        }else{
+            return  $this->apisucces('操作失败');
         }
     }
 }
