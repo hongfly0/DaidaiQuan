@@ -1,0 +1,120 @@
+<include file="public@header" />
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a href="{:url('zone/index')}">区域列表</a></li>
+        <li><a href="{:url('zone/add_zone')}">添加区域</a></li>
+    </ul>
+    <form class="js-ajax-form" action="{:url('zone/index')}" method="post">
+        <div class="table-actions">
+            <button class="btn btn-primary btn-sm js-ajax-submit" type="submit">{:lang('SORT')}</button>
+        </div>
+        <table class="table table-hover table-bordered table-list" id="menus-table">
+            <thead>
+            <tr>
+                <th width="80">ID</th>
+                <th width="50">区域名称</th>
+                <th width="180">{:lang('ACTIONS')}</th>
+            </tr>
+            </thead>
+            <tbody>
+             <foreach name="zones" item="vo" key="key">
+                <tr>
+                    <td>{$key+1}</td>
+                    <td>{$vo.z_name}</td>
+                    <td>
+                        <font color="#cccccc"><a href="/Admin/zone/edit_zone?z_id={$vo.z_id}">编辑</a></font>
+                        <font color="#cccccc"><a href="javascript:void(0)" onclick="del_query_zone({$vo.z_id})">删除</a></font>
+                    </td>
+                </tr>
+                 <foreach name="$vo.child_values" item="vo2" key="key2">
+                     <tr>
+                         <td></td>
+                         <td>└─&nbsp;&nbsp;{$vo2.z_name}</td>
+                         <td>
+                             <font color="#cccccc"><a href="/Admin/zone/edit_zone?z_id={$vo2.z_id}">编辑</a></font>
+                             <font color="#cccccc"><a href="javascript:void(0)" onclick="del_query_zone({$vo2.z_id})">删除</a></font>
+                         </td>
+                     </tr>
+                     <foreach name="$vo2.child_values" item="vo3" key="key2">
+                         <tr>
+                             <td></td>
+                             <td>&nbsp;&nbsp;&nbsp;&nbsp;└─&nbsp;&nbsp;{$vo3.z_name}</td>
+                             <td>
+                                 <font color="#cccccc"><a href="/Admin/zone/edit_zone?z_id={$vo3.z_id}">编辑</a></font>
+                                 <font color="#cccccc"><a href="javascript:void(0)" onclick="del_query_zone({$vo3.z_id})">删除</a></font>
+                             </td>
+                         </tr>
+                     </foreach>
+                 </foreach>
+             </foreach>
+            </tbody>
+        </table>
+        <div class="table-actions">
+            <button class="btn btn-primary btn-sm js-ajax-submit" type="submit">{:lang('SORT')}</button>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script type="text/javascript" src="__STATIC__/layer/layer.js"></script>
+<script type="text/javascript" src="__STATIC__/addel/addel.jquery.js"></script>
+<script>
+    $(document).ready(function() {
+        Wind.css('treeTable');
+        Wind.use('treeTable', function() {
+            $("#menus-table").treeTable({
+                indent : 20
+            });
+        });
+    });
+    
+    function del_query_zone(z_id) {
+        layer.confirm('确定要删除吗？', {
+            btn: ['删除','取消'] //按钮
+        }, function(){
+            $.ajax({
+                url: "{:url('zone/del_zone')}",
+                type: "POST",
+                data: {"z_id":z_id},
+                dataType: "JSON",
+                success: function (res) {
+                    if(res.code == 1){
+                        layer.msg(res.msg, {icon: 1});
+                        location.href="{:url('zone/index')}";
+                    }else{
+                        layer.msg(res.msg, {icon: 2});
+                    }
+                }
+            });
+        }, function(){
+            layer.close();
+        });
+    }
+
+    function del_query_value(qv_id) {
+        layer.confirm('确定要删除吗？', {
+            btn: ['删除','取消'] //按钮
+        }, function(){
+            $.ajax({
+                url: "{:url('Querytype/del_value')}",
+                type: "POST",
+                data: {"qv_id":qv_id},
+                dataType: "JSON",
+                success: function (res) {
+                    if(res.code == 1){
+                        layer.msg(res.msg, {icon: 1});
+                        location.href="{:url('Querytype/querytypeList')}";
+                    }else{
+                        layer.msg(res.msg, {icon: 2});
+                    }
+                }
+            });
+        }, function(){
+            layer.close();
+        });
+    }
+</script>
+</body>
+</html>

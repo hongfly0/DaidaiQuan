@@ -1,0 +1,97 @@
+
+<include file="public@header"/>
+</head>
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all">
+<style>
+
+</style>
+
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:url('zone/index')}">区域列表</a></li>
+        <li  class="active"><a href="{:url('zone/add_zone')}">添加区域</a></li>
+    </ul>
+    <form class="form-horizontal js-ajax-form margin-top-20 layui-form" role="form" action="return false"
+          method="post">
+        <fieldset>
+            <div class="tabbable">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="A">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span
+                                    class="form-required">*</span>分类英文名:</label>
+                            <div class="col-md-6 col-sm-10">
+                                <select name="z_pid" id="z_pid" style="height: 25px;line-height: 25px;width: 100px">
+                                    <foreach name="zones" item="vo" key="key">
+                                        <option value="{$vo.z_id}">{$vo.z_name}</option>
+                                        <foreach name="$vo.child_values" item="vo2" key="key2">
+                                            <option value="{$vo2.z_id}">└─&nbsp;&nbsp;{$vo2.z_name}</option>
+                                        </foreach>
+                                    </foreach>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">
+                                <span class="form-required">*</span>地区名称:</label>
+                            </label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" id="z_name" lay-verify="required" name="z_name">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button lay-submit lay-filter="*" type="button" class="layui-btn" id="submit_form"
+                            style="width: 30%;margin-top: 10px;margin-left: 20%">
+                        提交保存
+                    </button>
+
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+<script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script type="text/javascript" src="__STATIC__/layer/layer.js"></script>
+<script type="text/javascript" src="__STATIC__/addel/addel.jquery.js"></script>
+
+<script>
+
+    layui.use('form', function () {
+        var form = layui.form;
+
+        form.on('submit(*)', function (data) {
+            var z_pid = $("#z_pid").val(),
+                z_name = $("#z_name").val();
+
+            var data = {
+                "z_pid": z_pid,
+                "z_name": z_name
+            };
+
+            $.ajax({
+                url: "{:url('Zone/post_add_zone')}",
+                type: "POST",
+                data: data,
+                dataType: "JSON",
+                success: function (res) {
+                    if (res.code != '1') {
+                        layer.msg(res.msg);
+                    } else {
+                        layer.msg(res.msg);
+                        location.href="{:url('zone/index')}";
+                    }
+                }
+            });
+
+            return false;
+
+        });
+    });
+
+</script>
+</body>
+</html>

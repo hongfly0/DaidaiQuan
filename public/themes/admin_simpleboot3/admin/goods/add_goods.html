@@ -230,7 +230,36 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label"><span class="form-required">*</span>适用地区</label>
                             <div class="col-md-6 col-sm-10">
-
+                                <table>
+                                <tbody>
+                                <foreach name="zones" item="vo" key="key">
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" lay-skin="primary" value="{$vo.z_id}" name="zones" class="zone" title="{$vo.z_name}">
+                                            </td>
+                                    </tr>
+                                    <foreach name="$vo.child_values" item="vo2" key="key2">
+                                        <tr>
+                                            <td></td>
+                                            <td>─&nbsp;&nbsp;<input type="checkbox" lay-skin="primary" name="zones" value="{$vo2.z_id}" class="zone" title="{$vo2.z_name}"></td>
+                                            <td>
+                                                <foreach name="$vo2.child_values" item="vo3" key="key2">
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;─&nbsp;
+                                                    <input type="checkbox" lay-skin="primary" name="zones" value="{$vo3.z_id}" class="zone" title="{$vo3.z_name}">
+                                                </foreach>
+                                            </td>
+                                        </tr>
+                                    </foreach>
+                                </foreach>
+                                </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">联系方式</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" id="product_contact"
+                                       name="product_contact" value="">
                             </div>
                         </div>
 
@@ -352,10 +381,26 @@
                 return false;
             }
 
+            var zones_arr = [];
+            var zones_str = "";
+
+            $.each($("input[name=zones]:checked"),function(){
+                zones_arr.push($(this).val());
+            });
+            console.log(zones_arr);
+            if(zones_arr.length==0){
+                layer.msg('请选择适用区域',{iconlaye:5});
+                return false;
+            }
+
+            zones_str = zones_arr.join(',');
+            zones_str = zones_str.substring(0, zones_str.length - 1);
+
             form.push({'name':'product_remark','value':$("#product_remark").val()});
+            form.push({'name':'use_zone_ids','value':zones_str});
 
             $.ajax({
-                url: "{:url('goods/post_save_goods')}",
+                url: "{:url('goods/post_add_goods')}",
                 type: "POST",
                 data: JSON.stringify(form),
                 dataType: "JSON",

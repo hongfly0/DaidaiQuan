@@ -237,10 +237,39 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label"><span class="form-required">*</span>适用地区</label>
                             <div class="col-md-6 col-sm-10">
-
+                                <table>
+                                    <tbody>
+                                    <foreach name="zones" item="vo" key="key">
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" lay-skin="primary" value="{$vo.z_id}" name="zones" class="zone" title="{$vo.z_name}">
+                                            </td>
+                                        </tr>
+                                        <foreach name="$vo.child_values" item="vo2" key="key2">
+                                            <tr>
+                                                <td></td>
+                                                <td>─&nbsp;&nbsp;<input type="checkbox" lay-skin="primary" value="{$vo2.z_id}" name="zones" class="zone" title="{$vo2.z_name}"></td>
+                                                <td>
+                                                    <foreach name="$vo2.child_values" item="vo3" key="key2">
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;─&nbsp;
+                                                        <input type="checkbox" lay-skin="primary" value="{$vo3.z_id}" name="zones"  class="zone" title="{$vo3.z_name}">
+                                                    </foreach>
+                                                </td>
+                                            </tr>
+                                        </foreach>
+                                    </foreach>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">联系方式</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" id="product_contact"
+                                       name="product_contact" value="{$product.product_contact}">
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">备注</label>
                             <div class="col-md-6 col-sm-10">
@@ -266,7 +295,15 @@
 
 <script>
 
-    var  query_values = {$product_query};
+    var query_values = {$product_query};
+    var zones = "{$product.use_zone_ids}";
+    var zones_arr = zones.split(',');
+
+    for (i=0;i<zones_arr.length ;i++ )
+    {
+        $(".zone[value='"+zones_arr[i]+"']").attr('checked','true');
+    }
+
 
     query_values.forEach(function (value,index,array) {
         $("#query_"+value.pv_id).attr("checked","true");
@@ -349,7 +386,22 @@
                 return false;
             }
 
+            var zones_arr = [];
+            var zones_str = "";
+
+            $.each($("input[name=zones]:checked"),function(){
+                zones_arr.push($(this).val());
+            });
+            console.log(zones_arr);
+            if(zones_arr.length==0){
+                layer.msg('请选择适用区域',{iconlaye:5});
+                return false;
+            }
+
+            zones_str = zones_arr.join(',');
+
             form.push({'name':'product_remark','value':$("#product_remark").val()});
+            form.push({'name':'use_zone_ids','value':zones_str});
 
             $.ajax({
                 url: "{:url('goods/post_save_goods')}",

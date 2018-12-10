@@ -100,8 +100,10 @@ class GoodsController extends AdminBaseController{
             $new_types[] = $trows;
         }
 
-        $this->assign("types", $new_types);
+        $zones = $this->zonelist();
 
+        $this->assign('zones',$zones);
+        $this->assign("types", $new_types);
         return $this->fetch();
     }
 
@@ -141,6 +143,9 @@ class GoodsController extends AdminBaseController{
         $this->assign('product_query',json_encode($product_query));
         $this->assign("types", $new_types);
 
+        $zones = $this->zonelist();
+        $this->assign('zones',$zones);
+
         return $this->fetch();
     }
 
@@ -152,6 +157,9 @@ class GoodsController extends AdminBaseController{
         $insert_query = array();
 
         foreach ($request_data as $value){
+            if($value['name']=='zones'){
+                continue;
+            }
 
             if(strstr($value['name'],'query_array')){
                 $insert_query = array_merge($insert_query,$value['values']);
@@ -169,7 +177,7 @@ class GoodsController extends AdminBaseController{
         $insert_data['create_user_id'] = 1;
         $insert_data['product_status'] = 4;
         $insert_data['create_at'] = date('Y-m-d H:i:s');
-        $insert_data['edit_at'] = date('Y-m-d H:i:s');
+        $insert_data['update_at'] = date('Y-m-d H:i:s');
 
         $insert_res = Db::name('product')->insertGetId($insert_data);
 
@@ -299,6 +307,9 @@ class GoodsController extends AdminBaseController{
         $insert_query = array();
 
         foreach ($request_data as $value){
+            if($value['name']=='zones'){
+                continue;
+            }
 
             if(strstr($value['name'],'query_array')){
                 $insert_query = array_merge($insert_query,$value['values']);
@@ -319,7 +330,7 @@ class GoodsController extends AdminBaseController{
 
         $update_data['create_user_id'] = 1;
         $update_data['create_at'] = date('Y-m-d H:i:s');
-        $update_data['edit_at'] = date('Y-m-d H:i:s');
+        $update_data['update_at'] = date('Y-m-d H:i:s');
 
         $update_res = Db::name('product')->where('product_id',$product_id)->update($update_data);
 
@@ -450,5 +461,30 @@ class GoodsController extends AdminBaseController{
         }else{
             return  $this->apisucces('操作失败');
         }
+    }
+
+    /**
+     * 获取zone
+     */
+    public function zonelist(){
+        $where = '1=1 and z_pid=0';
+
+        $zone_p1 = Db::name('zone')
+            ->where($where)
+            ->order("z_id ASC")
+            ->select()->toArray();
+
+        foreach ($zone_p1 as &$value){
+            $zone_p2  = Db::name('zone')->where('z_pid',$value['z_id'])->select()->toArray();
+
+            foreach ($zone_p2 as &$value2){
+                $zone_p3  = Db::name('zone')->where('z_pid',$value2['z_id'])->select()->toArray();
+                $value2['child_values'] = $zone_p3;
+            }
+
+            $value['child_values'] = $zone_p2;
+        }
+
+        return $zone_p1;
     }
 }
