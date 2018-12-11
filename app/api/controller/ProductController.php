@@ -56,8 +56,11 @@ class ProductController extends HomeBaseController
         $product_ids = $product_ids->distinct(true)->field('product_id')->page($this::$page,$this::$limit)->select()->toArray();
 
         $result = Db::table('ddq_product')
-            ->where('product_status','1')
-            ->where('product_id','IN',array_column($product_ids,'product_id'));
+            ->where('product_status','1');
+
+        if($product_ids){
+            $result = $result->where('product_id','IN',array_column($product_ids,'product_id'));
+        }
 
         if(!empty($this::$search_key)){
             $search_key = $this::$search_key;
