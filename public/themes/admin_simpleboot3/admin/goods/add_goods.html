@@ -186,14 +186,14 @@
                             <label class="col-sm-2 control-label">贷款金额</label>
                             <div class="col-md-6 col-sm-10">
                                 最高
-                                <input type="text" class="layui-input" id="loan_amount"  name="loan_amount" value="" style="width: 100px;display: inline-block" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" maxlength="9" size="14">
+                                <input type="text" class="layui-input" id="loan_amount"  name="loan_amount" value="" style="width: 100px;display: inline-block" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" maxlength="9" size="14"> 万
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label">利率</label>
                             <div class="col-md-6 col-sm-10">
-                                低至<input type="text" class="layui-input" id="interest_rate"  name="interest_rate" value="" style="width: 100px;display: inline-block" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" maxlength="3" size="14">
+                                低至<input type="text" class="layui-input" id="interest_rate"  name="interest_rate" value="" style="width: 100px;display: inline-block" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" maxlength="5" size="14">
                             </div>
                         </div>
 
@@ -205,17 +205,9 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label"><span class="form-required">*</span>必备条件</label>
-                            <div class="col-md-6 col-sm-10">
-                                <input type="text" class="form-control" lay-verify="required"  id="must_conditions"
-                                       name="must_conditions">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
                             <label class="col-sm-2 control-label">审核周期</label>
                             <div class="col-md-6 col-sm-10">
-                                最高<input type="text" class="layui-input" id="audit_cycle"  name="audit_cycle" value="" style="width: 100px;display: inline-block" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" maxlength="8" size="14">
+                                最高<input type="text" class="layui-input" id="audit_cycle"  name="audit_cycle" value="" style="width: 100px;display: inline-block" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')" onafterpaste="this.value=this.value.replace(/[^\d.]/g,'')" maxlength="8" size="14"> 天
                             </div>
                         </div>
 
