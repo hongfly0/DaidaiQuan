@@ -2,7 +2,7 @@
 namespace app\api\Service;
 
 
-class WXBizDataCrypt
+class WXBizdatacrypt
 {
     private $appid;
 	private $sessionKey;

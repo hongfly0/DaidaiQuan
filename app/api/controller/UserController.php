@@ -16,13 +16,13 @@ header('Access-Control-Allow-Methods:*');
 // 响应头设置
 header('Access-Control-Allow-Headers:x-requested-with,content-type');
 
-use app\api\Service\WXBizDataCrypt;
 use app\api\Service\WxToken;
 use app\portal\model\MemberModel;
 use app\portal\model\ProductModel;
 use app\portal\model\ProductQueryModel;
 use cmf\controller\HomeBaseController;
 use think\Db;
+use wxapp\aes\WXBizDataCrypt;
 
 class UserController extends HomeBaseController
 {
