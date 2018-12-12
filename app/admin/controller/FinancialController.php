@@ -25,7 +25,7 @@ class FinancialController extends AdminBaseController
         $where = '1=1';
 
         /**搜索条件**/
-        $key_word = $this->request->param('key_word');
+        $key_word = empty($this->request->param('key_word'))?'':$this->request->param('key_word');
 
         if ($key_word) {
             $where .= " and `ins_mobile` like '%". $key_word ."%'";

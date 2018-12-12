@@ -121,8 +121,7 @@ class AgentController extends AdminBaseController
 
         $where = '1=1';
 
-        /**搜索条件**/
-        $key_word = $this->request->param('key_word');
+        $key_word = empty($this->request->param('key_word'))?'':$this->request->param('key_word');
 
         if ($key_word) {
             $where .= " and `agent_mobile` like '%". $key_word ."%'";
@@ -135,6 +134,7 @@ class AgentController extends AdminBaseController
         // 获取分页显示
         $page = $agent->render();
 
+        $this->assign('key_word',$key_word);
         $this->assign("page", $page);
         $this->assign("agent", $agent);
         return $this->fetch();

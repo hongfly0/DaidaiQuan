@@ -1,13 +1,68 @@
 <include file="public@header" />
+<style>
+    .select_style {
+        height:  38px;
+        line-height: 38px;
+        width: 10%;
+    }
+</style>
 </head>
 <body>
 <div class="wrap js-check-wrap">
     <ul class="nav nav-tabs">
         <li class="active"><a href="{:url('agent/agentStoreList')}">产品列表</a></li>
     </ul>
-    <form class="well form-inline margin-top-20" method="post" action="{:url('goods/goodsList')}">
-        查找
-        <input type="text" class="form-control" name="key_word" style="width: 30%;" value="{:input('request.user_login/s','')}" placeholder="请输入产品名称">
+    <form class="well form-inline margin-top-20 layui-form" method="post" action="{:url('goods/goodsList')}">
+
+        <input type="text" class="form-control" name="ins_mobile" style="width: 30%;" value="{$key_ins_mobile}" placeholder="发布人手机号码">
+
+        <input type="text" class="form-control" name="key_word" style="width: 30%;" value="{$key_word}" placeholder="请输入产品名称">
+
+
+        <br>
+        <br>
+
+        <select name="service_object" class="select_style">
+            <option value="">服务对象</option>
+            <option value="对公" <if condition="$key_service_object eq '对公'">selected</if> >对公</option>
+            <option value="对私" <if condition="$key_service_object eq '对私'">selected</if> >对私</option>
+        </select>
+
+        <select name="product_type" class="select_style">
+            <option value="">产品类型</option>
+            <foreach name="product_type" item="vo" key="key">
+                <option value="{$vo.qv_id}" <if condition="$vo.qv_id eq  $key_product_type">selected</if> >{$vo.qv_value}</option>
+            </foreach>
+        </select>
+
+        <select name="product_status" class="select_style">
+            <option value="">状态</option>
+            <option value="1" <if condition="$key_product_status eq '1'">selected</if>>发布中</option>
+            <option value="2" <if condition="$key_product_status eq '2'">selected</if>>暂停</option>
+            <option value="3" <if condition="$key_product_status eq '3'">selected</if>>已过期</option>
+        </select>
+
+        <select name="refund_type" class="select_style">
+            <option value="">还款方式</option>
+            <foreach name="refund_type" item="vo" key="key">
+                <option value="{$vo.qv_id}" <if condition="$vo.qv_id eq  $key_refund_type">selected</if> >{$vo.qv_value}</option>
+            </foreach>
+        </select>
+
+        <select name="zones" id="zones" class="select_style">
+            <option value="">适用区域</option>
+            <foreach name="zones" item="vo" key="key">
+                <option value="{$vo.z_id}">{$vo.z_name}</option>
+                <foreach name="$vo.child_values" item="vo2" key="key2">
+                    <option value="{$vo2.z_id}">└─&nbsp;&nbsp;{$vo2.z_name}</option>
+                    <foreach name="$vo2.child_values" item="vo3" key="key3">
+                        <option value="{$vo3.z_id}">&nbsp;&nbsp;└─&nbsp;&nbsp;{$vo3.z_name}</option>
+                    </foreach>
+                </foreach>
+            </foreach>
+        </select>
+
+
         <input type="submit" class="btn btn-primary" value="搜索" />
     </form>
     <table class="table table-hover table-bordered">
@@ -25,7 +80,11 @@
             <th>联系方式</th>
             <th>审批周期</th>
             <th>状态</th>
-            <th>浏览量</th>
+            <th>收藏用户</th>
+            <th>浏览用户</th>
+            <th>发布人</th>
+            <th>发布人手机</th>
+            <th>热门置顶</th>
             <th width="130">{:lang('ACTIONS')}</th>
         </tr>
         </thead>
@@ -59,6 +118,10 @@
                     </php>
                 </td>
                 <td>{$vo.view_num}</td>
+                <td>{$vo.collect_num}</td>
+                <td>{$vo.ins_name}</td>
+                <td>{$vo.ins_mobile}</td>
+                <th>{$vo.set_hot}  {$vo.set_top}</th>
                 <td width="180px">
                     <font color="#cccccc"><a href="/Admin/goods/product_detail?product_id={$vo.product_id}">查看</a></font>
                     <font color="#cccccc"><a href="javascript:void(0)" onclick="refresh_product({$vo.product_id})">刷新</a></font>
@@ -83,6 +146,10 @@
 <script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
 <script type="text/javascript" src="__STATIC__/layer/layer.js"></script>
 <script>
+    var zone_id = {$key_zone};
+
+    $("#zones").val(zone_id);
+
     function refresh_product(id) {
         $.ajax({
             url: "{:url('goods/refresh_product')}",

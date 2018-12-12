@@ -5,9 +5,9 @@
     <ul class="nav nav-tabs">
         <li class="active"><a href="{:url('agent/agentStoreList')}">{:lang('AGENT_STORE_LIST')}</a></li>
     </ul>
-    <form class="well form-inline margin-top-20" method="post" action="{:url('agent/agentStoreList')}">
+    <form class="well form-inline margin-top-20" method="get" action="{:url('agent/agentStoreList')}">
         查找
-        <input type="text" class="form-control" name="key_word" style="width: 120px;" value="{:input('request.user_login/s','')}" placeholder="请输入手机号">
+        <input type="text" class="form-control" name="key_word" style="width: 250px;" value="{$key_word}" placeholder="请输入手机号">
         <input type="submit" class="btn btn-primary" value="搜索" />
     </form>
     <table class="table table-hover table-bordered">
