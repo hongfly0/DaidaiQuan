@@ -59,7 +59,6 @@ class UserController extends HomeBaseController
 
         $wx_user_data = json_decode($wx_user_info);
 
-
         $memger_info->member_name = $wx_user_data->nickName;
         $memger_info->member_avatar_url = $wx_user_data->avatarUrl;
         $memger_info->updated_at = date('Y-m-d H:i:s');
