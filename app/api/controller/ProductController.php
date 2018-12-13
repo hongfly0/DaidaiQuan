@@ -110,12 +110,26 @@ class ProductController extends HomeBaseController
             return $this->apifailed('产品不存在');
         }
 
+        $product_type = Db::name('query_type')->field('qt_id,qt_en_name,qt_name')->select()->toArray();
+
+        $product_query = Db::name('product_query')->where('product_id',$product_id)->select()->toArray();
+
+        foreach ($product_type as &$value){
+            foreach ($product_query as $row){
+                if($value['qt_id'] == $row['pt_id']){
+                    $value['query_values'][] = array('pv_id'=>$row['pv_id'],'pv_value'=>$row['pv_value']);
+                }
+            }
+        }
+
         if(!empty($_REQUEST['member_id'])){
             //检测是否已收藏
             $product_info['collect_status'] = $this->checkCollect($_REQUEST['member_id'],$_REQUEST['product_id']);
         }else{
             $product_info['collect_status'] = 0;
         }
+
+        $product_info['product_query'] = $product_type;
 
         $result = $product_info;
 
