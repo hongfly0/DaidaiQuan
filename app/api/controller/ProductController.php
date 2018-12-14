@@ -131,6 +131,14 @@ class ProductController extends HomeBaseController
 
         $product_info['product_query'] = $product_type;
 
+        //获取地区字符
+        $zone = Db::name('zone')->whereIn('z_id',$product_info['use_zone_ids'])->field('z_name')->select()->toArray();
+
+        $product_info['use_zone_title'] = '';
+        if($zone){
+            $product_info['use_zone_title'] = implode(',',array_column($zone,'z_name'));
+        }
+
         $result = $product_info;
 
         return $this->apisucces('产品详情',$result);

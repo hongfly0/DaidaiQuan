@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all">
 <style>
     .boxa{ overflow:hidden}
-    .boxa,.boxb{ margin:0 auto; width:400px;}
+    .boxa,.boxb{ margin:0 auto; width:400px;font-weight: 600;color:#555555}
     .boxa-l{ float:left; width:280px; height:80px; }
     .boxa-r{ float:right; width:100px; height:80px; }
     .boxb{ border:1px solid #bababa; height:auto;}
@@ -15,36 +15,100 @@
 
 <body>
 <div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li><a href="{:url('goods/goodslist')}">产品列表</a></li>
+    </ul>
     <form class="form-horizontal js-ajax-form margin-top-20 layui-form" id="goodsform" role="form" action="return false"
           method="post">
         <fieldset>
             <div class="tabbable"  class="layui-form" lay-filter="from_layui" style="width: 80%;margin-left: 10%">
-                <center><dvi>{$info.product_name}</dvi></center>
+                <center><div style="font-size: 20px;font-weight: 600">{$info.product_name}</div></center>
 
-                 <div class="boxa" style="width: 100%;height: 30px;">
-                        <div class="boxa-l" style="width: 50%; float: left;">
-                                发布时间:{$info.create_at}
-                            </div>
-                            <div class="boxa-r" style="width: 50%;float: left;text-align: right">
-                                产品编号:{$info.product_no}
-                            </div>
+                <div class="boxa" style="width: 100%;height: 30px;">
+                    <div class="boxa-l" style="width: 50%; float: left;">
+                        发布时间:&nbsp;&nbsp;{$info.create_at}
                     </div>
-                    <div class="boxb" style="width: 100%;padding: 10px">
-                        {$info.product_detail}
+                    <div class="boxa-r" style="width: 50%;float: left;text-align: right">
+                        产品编号:&nbsp;&nbsp;{$info.product_no}
                     </div>
-                    <div class="boxb" style="width: 100%;padding: 10px;text-align: center;border: 0px">
-                        <button lay-submit lay-filter="*" type="button" class="layui-btn" id="edit_product"
-                                style="width: 20%;margin-top: 10px;margin-left: 20%" onclick="location.href='/Admin/Goods/editGoods?product_id={$info.product_id}'">
-                            编辑内容
-                        </button>
-                        <button lay-submit lay-filter="*" type="button" class="layui-btn" id="del_product"
-                                style="width: 20%;margin-top: 10px;margin-left: 20%" data-product_id="{$info.product_id}">
-                            删除产品
-                        </button>
+                </div>
+
+                <div class="boxa" style="width: 100%;height: 30px;">
+                    <div class="boxa-l" style="width: 50%; float: left;">
+                        所属单位:&nbsp;&nbsp;{$info.company_name}
                     </div>
+                </div>
+                <div class="boxa" style="width: 100%;height: 30px;">
+                    <div class="boxa-l" style="width: 50%; float: left;">
+                        服务类型:&nbsp;&nbsp;{$info.service_object}
+                    </div>
+                    <div class="boxa-r" style="width: 50%;float: left;">
+                        贷款金额:&nbsp;&nbsp;{$info.loan_amount}
+                    </div>
+                </div>
+                <div class="boxa" style="width: 100%;height: 30px;">
+                    <div class="boxa-l" style="width: 50%; float: left;">
+                        贷款对象:&nbsp;&nbsp;{$info.loan_object}
+                    </div>
+                    <div class="boxa-r" style="width: 50%;float: left;">
+                        贷款用途:&nbsp;&nbsp;{$info.loan_use_dor}
+                    </div>
+                </div>
+                <div class="boxa" style="width: 100%;height: 30px;">
+                    <div class="boxa-l" style="width: 50%; float: left;">
+                        贷款年限:&nbsp;&nbsp;{$info.loan_time_limit} 年
+                    </div>
+                    <div class="boxa-r" style="width: 50%;float: left;">
+                        担保方式:&nbsp;&nbsp;{$info.assure_means}
+                    </div>
+                </div>
+                <div class="boxa" style="width: 100%;height: 30px;">
+                    <div class="boxa-l" style="width: 50%; float: left;">
+                        利    率:&nbsp;&nbsp;{$info.interest_rate} 厘
+                    </div>
+                    <div class="boxa-r" style="width: 50%;float: left;">
+                        手续费:&nbsp;&nbsp;{$info.poundage}
+                    </div>
+                </div>
+                <div class="boxa" style="width: 100%;height: 30px;">
+                    <div class="boxa-l" style="width: 50%; float: left;">
+                        审核周期:&nbsp;&nbsp;{$info.audit_cycle} 天
+                    </div>
+                    <div class="boxa-r" style="width: 50%;float: left;">
+                        适用地区:&nbsp;&nbsp;{$info.use_zone_title}
+                    </div>
+                </div>
+                <div class="boxa" style="width: 100%;height: 30px;">
+                    <div class="boxa-r" style="width: 50%;float: left;">
+                        联系方式:&nbsp;&nbsp;{$info.product_contact}
+                    </div>
+                </div>
+                <foreach name="$info.product_query" item="vo" key="key">
+                    <div class="boxa" style="width: 100%;height: 30px;">
+                        <div class="boxa-r" style="width: 50%;float: left;">
+                            {$vo.qt_name}:&nbsp;&nbsp;
+                            <foreach name="$vo.query_values" item="vo2" key="key2">
+                                {$vo2.pv_value} &nbsp;&nbsp;
+                            </foreach>
+                        </div>
+                    </div>
+                </foreach>
+                <div class="boxb" style="width: 100%;padding: 10px">
+                    {$info.product_detail}
+                </div>
+                <div class="boxb" style="width: 100%;padding: 10px;text-align: center;border: 0px">
+                    <button lay-submit lay-filter="*" type="button" class="layui-btn" id="edit_product"
+                            style="width: 20%;margin-top: 10px;margin-left: 20%" onclick="location.href='/admin/Goods/editGoods?product_id={$info.product_id}'">
+                        编辑内容
+                    </button>
+                    <button lay-submit lay-filter="*" type="button" class="layui-btn" id="del_product"
+                            style="width: 20%;margin-top: 10px;margin-left: 20%" data-product_id="{$info.product_id}">
+                        删除产品
+                    </button>
+                </div>
             </div>
         </fieldset>
-        </form>
+    </form>
 </div>
 <script type="text/javascript" src="__STATIC__/js/admin.js"></script>
 <script type="text/javascript" src="__STATIC__/layui/layui.js"></script>

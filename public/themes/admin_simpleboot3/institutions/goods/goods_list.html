@@ -10,7 +10,7 @@
 <body>
 <div class="wrap js-check-wrap">
     <ul class="nav nav-tabs">
-        <li><a href="{:url('goods/goodslist')}">产品列表</a></li>
+        <li class="active"><a href="{:url('goods/goodsList')}">产品列表</a></li>
     </ul>
     <form class="well form-inline margin-top-20 layui-form" method="post" action="{:url('goods/goodsList')}">
 
@@ -123,7 +123,7 @@
                 <td>{$vo.ins_mobile}</td>
                 <th>{$vo.set_hot}  {$vo.set_top}</th>
                 <td width="180px">
-                    <font color="#cccccc"><a href="/Admin/goods/product_detail?product_id={$vo.product_id}">查看</a></font>
+                    <font color="#cccccc"><a href="/institutions/goods/product_detail?product_id={$vo.product_id}">查看</a></font>
                     <font color="#cccccc"><a href="javascript:void(0)" onclick="refresh_product({$vo.product_id})">刷新</a></font>
                     <font color="#cccccc"><a href="javascript:void(0)" onclick="pause_product(this,{$vo.product_id})">
                         <if condition="$vo.product_status eq 1">
@@ -133,7 +133,7 @@
                             </else>
                         </if>
                     </a></font>
-                    <font color="#cccccc"><a href="/Admin/goods/editGoods?product_id={$vo.product_id}">编辑</a></font>
+                    <font color="#cccccc"><a href="/institutions/goods/editGoods?product_id={$vo.product_id}">编辑</a></font>
                     <font color="#cccccc"><a href="javascript:void(0)" onclick="del_product({$vo.product_id})">删除</a></font>
                 </td>
             </tr>
