@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <!-- Set render engine for 360 browser -->
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- HTML5 shim for IE8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <![endif]-->
+
+
+    <link href="/themes/admin_simpleboot3/public/assets/themes/flatadmin/bootstrap.min.css" rel="stylesheet">
+    <link href="/themes/admin_simpleboot3/public/assets/simpleboot3/css/simplebootadmin.css" rel="stylesheet">
+    <link href="/static/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="__STATIC__/js/layer/skin/default/layer.css" rel="stylesheet" type="text/css">
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        form .input-order {
+            margin-bottom: 0px;
+            padding: 0 2px;
+            width: 42px;
+            font-size: 12px;
+        }
+
+        form .input-order:focus {
+            outline: none;
+        }
+
+        .table-actions {
+            margin-top: 5px;
+            margin-bottom: 5px;
+            padding: 0px;
+        }
+
+        .table-list {
+            margin-bottom: 0px;
+        }
+
+        .form-required {
+            color: red;
+        }
+    </style>
+    <script src="__TMPL__/public/assets/js/jquery-1.10.2.min.js"></script>
+    <script src="__TMPL__/public/assets/js/bootstrap.min.js"></script>
+</head>
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all">
+<style>
+    #app {
+        width: 1265px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        font-family: "Source Sans Pro", Calibri, Candara, Arial, sans-serif;
+    }
+
+    .add-product {
+        display: flex;
+        align-items: center;
+    }
+
+    .add-product .el-tag {
+        margin-right: 20px;
+    }
+
+    /* 上传图片相关 */
+    .upload-img {
+        display: flex;
+        list-style: none;
+    }
+
+    .upload-img li + li {
+        margin-left: 20px;
+    }
+
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .avatar-uploader .el-upload:hover {
+        border-color: #409EFF;
+    }
+
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
+    }
+
+    .avatar {
+        width: 178px;
+        height: 178px;
+        display: block;
+    }
+
+    .layui-btn {
+        width: 100%;
+    }
+</style>
+
+<body>
+<div class="wrap js-check-wrap">
+    <center><div>金融机构注册认证</div></center>
+    <form class="form-horizontal js-ajax-form margin-top-20 layui-form" role="form" action="return false"
+          method="post">
+        <fieldset>
+            <div class="tabbable">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="A" style="padding-left: 20%">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span
+                                    class="form-required">*</span>单位名称:</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" id="ins_name" name="ins_name"
+                                       lay-verify="required"
+                                       value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">
+                                <span class="form-required">*</span>法人代表:</label>
+                            </label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" id="ins_company_owner" lay-verify="required" name="ins_company_owner">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">联系人:</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" id="ins_contacter"
+                                       name="ins_contacter">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">
+                                <span class="form-required">*</span>公司电话:</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" id="ins_company_phone"
+                                       name="ins_company_phone" lay-verify="required"
+                                       value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">地址:</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control" id="ins_company_address"
+                                       name="ins_company_address" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span
+                                    class="form-required">*</span>设置密码</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="password" class="form-control" id="ins_login_passwod"
+                                       name="ins_login_passwod" value="" lay-verify="required">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">
+                                <span class="form-required">*</span>再次输入:</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="password" class="form-control" lay-verify="required" id="ins_login_passwod_again"
+                                       name="ins_login_passwod_again">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><span
+                                    class="form-required">*</span>手机号(登陆账号):</label>
+                            <div class="col-md-6 col-sm-10">
+                                <input type="text" class="form-control layui-input"  lay-verify="required" id="ins_mobile"
+                                       name="ins_mobile" value="">
+                            </div>
+                        </div>
+                        <div id="app" style="padding-left: 10%">
+                            <ul class="upload-img">
+                                <li>
+                                    <p style="font-weight: bold">营业执照</p>
+                                    <img class="avatar" id="img_upload1" src="__STATIC__/images/load_img.png"
+                                         data-agent_business_license_img="">
+                                    <button type="button" class="layui-btn" id="upload1">
+                                        <i class="layui-icon">&#xe67c;</i>上传图片
+                                    </button>
+                                </li>
+                                <li>
+                                    <p style="font-weight: bold">法人身份证正面</p>
+                                    <img class="avatar" id="img_upload2" src="__STATIC__/images/load_img.png"
+                                         data-agent_ID_card_postitive="">
+                                    <button type="button" class="layui-btn" id="upload2">
+                                        <i class="layui-icon">&#xe67c;</i>上传图片
+                                    </button>
+                                </li>
+                                <li>
+                                    <p style="font-weight: bold">法人身份证背面</p>
+                                    <img class="avatar" id="img_upload3" src="__STATIC__/images/load_img.png"
+                                         data-agent_ID_card_back="">
+                                    <button type="button" class="layui-btn" id="upload3">
+                                        <i class="layui-icon">&#xe67c;</i>上传图片
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                    <button lay-submit lay-filter="*" type="button" class="layui-btn" id="submit_form"
+                            style="width: 30%;margin-top: 10px;margin-left: 35%">
+                        提交认证
+                    </button>
+
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+<script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script type="text/javascript" src="__STATIC__/layer/layer.js"></script>
+<script type="text/javascript" src="__STATIC__/addel/addel.jquery.js"></script>
+
+<script>
+    layui.use('upload', function () {
+        var upload = layui.upload;
+
+        //营业执照
+        var uploadInst1 = upload.render({
+            elem: '#upload1' //绑定元素
+            , url: '/admin/public/upload_img' //上传接口
+            , done: function (res) {
+                $("#img_upload1").attr('src', res.data.url);
+                $("#img_upload1").data('ins_business_license', res.data.url);
+            }
+            , error: function () {
+                //请求异常回调
+            }
+        });
+
+        //身份证正面
+        var uploadInst2 = upload.render({
+            elem: '#upload2' //绑定元素
+            , url: '/admin/public/upload_img' //上传接口
+            , done: function (res) {
+                $("#img_upload2").attr('src', res.data.url);
+                $("#img_upload2").data('ins_agent_idcard_postitive', res.data.url);
+            }
+            , error: function () {
+                //请求异常回调
+            }
+        });
+
+        //身份证反面
+        var uploadInst3 = upload.render({
+            elem: '#upload3' //绑定元素
+            , url: '/admin/public/upload_img' //上传接口
+            , done: function (res) {
+                $("#img_upload3").attr('src', res.data.url);
+                $("#img_upload3").data('ins_agent_idcard_back', res.data.url);
+            }
+            , error: function () {
+                //请求异常回调
+            }
+        });
+    });
+
+    layui.use('form', function () {
+        var form = layui.form;
+
+        form.on('submit(*)', function (data) {
+            var ins_name = $("#ins_name").val(),
+                ins_contacter = $("#ins_contacter").val(),
+                ins_company_phone = $("#ins_company_phone").val(),
+                ins_company_address = $("#ins_company_address").val(),
+                ins_mobile = $("#ins_mobile").val(),
+                ins_login_passwod = $("#ins_login_passwod").val(),
+                ins_company_owner = $("#ins_company_owner").val(),
+                ins_business_license = $("#img_upload1").data('ins_business_license'),
+                ins_agent_idcard_postitive = $("#img_upload2").data('ins_agent_idcard_postitive'),
+                ins_agent_idcard_back = $("#img_upload3").data('ins_agent_idcard_back'),
+                ins_login_passwod_again = $("#ins_login_passwod_again").val();
+
+            if(!(/^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/.test(ins_mobile))){
+                layer.msg('手机号码格式不正确',{icon:5});
+                return false;
+            }
+
+            if(ins_login_passwod != ins_login_passwod_again){
+                layer.msg('两次输入的密码不一致',{icon:5});
+                return false;
+            }
+
+            var data = {
+                "ins_name": ins_name,
+                "ins_company_owner": ins_company_owner,
+                "ins_mobile": ins_mobile,
+                "ins_contacter": ins_contacter,
+                "ins_company_phone": ins_company_phone,
+                "ins_company_address": ins_company_address,
+                "ins_login_passwod": ins_login_passwod,
+                "ins_business_license": ins_business_license,
+                "ins_agent_idcard_postitive": ins_agent_idcard_postitive,
+                "ins_agent_idcard_back": ins_agent_idcard_back
+            };
+
+            $.ajax({
+                url: "{:url('Institutions/post_add_financial')}",
+                type: "POST",
+                data: data,
+                dataType: "JSON",
+                success: function (res) {
+                    if (res.code != '1') {
+                        layer.msg(res.msg,{icon:5});
+                    } else {
+                        layer.alert('提交成功，请等待审核', {
+                            skin: 'layui-layer-molv' //样式类名
+                            ,closeBtn: 0
+                        }, function(){
+                            location.href="http://www.daidaiquan.cn";
+                        });
+                    }
+                }
+            });
+
+            return false;
+
+        });
+    });
+</script>
+</body>
+</html>
