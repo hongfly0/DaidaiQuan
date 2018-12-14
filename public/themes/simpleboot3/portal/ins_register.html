@@ -214,11 +214,15 @@
                         </div>
 
                     </div>
+                    <div>
+                        <div style="margin-left: 60%;margin-top: 30px">
+                    <input type="checkbox" lay-skin="primary"  id="user_agreement" title="用户协议" >
+                        </div>
                     <button lay-submit lay-filter="*" type="button" class="layui-btn" id="submit_form"
                             style="width: 30%;margin-top: 10px;margin-left: 35%">
                         提交认证
                     </button>
-
+                    </div>
                 </div>
             </div>
         </fieldset>
@@ -296,6 +300,11 @@
 
             if(ins_login_passwod != ins_login_passwod_again){
                 layer.msg('两次输入的密码不一致',{icon:5});
+                return false;
+            }
+
+            if($("#user_agreement").is(":checked") == false){
+                layer.msg('请认证阅读用户协议并同意',{icon:5});
                 return false;
             }
 
