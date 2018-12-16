@@ -14,7 +14,7 @@ use cmf\controller\AdminBaseController;
 use think\Db;
 use app\admin\model\AdminMenuModel;
 
-class IndexController extends AdminBaseController
+class IndexController extends InsBaseController
 {
 
     public function _initialize()

@@ -14,7 +14,7 @@ use cmf\controller\AdminBaseController;
 use cmf\lib\Upload;
 use think\Db;
 
-class PublicController extends AdminBaseController
+class PublicController extends InsBaseController
 {
     public function _initialize()
     {

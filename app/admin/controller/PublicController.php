@@ -108,12 +108,12 @@ class PublicController extends AdminBaseController
                 if (!empty($token)) {
                     session('token', $token);
                 }
-                Db::name('user')->update($result);
+                //Db::name('user')->update($result);
                 cookie("admin_username", $name, 3600 * 24 * 30);
                 session("__LOGIN_BY_CMF_ADMIN_PW__", null);
-                $this->success(lang('LOGIN_SUCCESS'), url("admin/Index/index"));
+                $this->success('登录成功', url("admin/Index/index"));
             } else {
-                $this->error(lang('PASSWORD_NOT_RIGHT'));
+                $this->error('密码不正确');
             }
         } else {
             $this->error(lang('USERNAME_NOT_EXIST'));

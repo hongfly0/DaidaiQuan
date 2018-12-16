@@ -18,7 +18,7 @@ use think\Db;
  * Class AdminTagController 标签管理控制器
  * @package app\portal\controller
  */
-class AdminTagController extends AdminBaseController
+class AdminTagController extends HomeBaseController
 {
     /**
      * 文章标签管理

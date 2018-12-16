@@ -20,20 +20,19 @@ class AdminBaseController extends BaseController
         // 监听admin_init
         hook('admin_init');
         parent::_initialize();
-        $INS_ID = session('INS_ID');
+        $session_admin_id = session('ADMIN_ID');
+        if (!empty($session_admin_id)) {
+            $user = Db::name('user')->where(['id' => $session_admin_id])->find();
 
-        if (!empty($INS_ID)) {
-            $user = Db::name('institutions')->where(['ins_id' => $INS_ID])->find();
-
-            if (!$this->checkAccess($INS_ID)) {
+            if (!$this->checkAccess($session_admin_id)) {
                 $this->error("您没有访问权限！");
             }
-            $this->assign("institutions", $user);
+            $this->assign("admin", $user);
         } else {
             if ($this->request->isPost()) {
-                $this->error("您还没有登录！", url("institutions/public/login"));
+                $this->error("您还没有登录！", url("admin/public/login"));
             } else {
-                header("Location:" . url("institutions/public/login"));
+                header("Location:" . url("admin/public/login"));
                 exit();
             }
         }

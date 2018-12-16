@@ -8,7 +8,7 @@ namespace app\institutions\controller;
 use cmf\controller\AdminBaseController;
 use think\Db;
 
-class GoodsController extends AdminBaseController{
+class GoodsController extends InsBaseController {
 
     public function _initialize()
     {

@@ -1,0 +1,215 @@
+<include file="public@header" />
+<style>
+    .select_style {
+        height:  38px;
+        line-height: 38px;
+        width: 10%;
+    }
+</style>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <ul class="nav nav-tabs">
+        <li ><a href="{:url('member/index')}">微信用户列表</a></li>
+        <li class="active"><a href="#">产品浏览列表</a></li>
+    </ul>
+    <form class="well form-inline margin-top-20 layui-form" method="post" action="{:url('member/view_list')}">
+
+        <input type="text" class="form-control" name="ins_mobile" style="width: 30%;" value="{$key_ins_mobile}" placeholder="发布人手机号码">
+
+        <input type="text" class="form-control" name="key_word" style="width: 30%;" value="{$key_word}" placeholder="请输入产品名称">
+
+        <br>
+        <br>
+
+        <select name="service_object" class="select_style">
+            <option value="">服务对象</option>
+            <option value="对公" <if condition="$key_service_object eq '对公'">selected</if> >对公</option>
+            <option value="对私" <if condition="$key_service_object eq '对私'">selected</if> >对私</option>
+        </select>
+
+        <select name="product_type" class="select_style">
+            <option value="">产品类型</option>
+            <foreach name="product_type" item="vo" key="key">
+                <option value="{$vo.qv_id}" <if condition="$vo.qv_id eq  $key_product_type">selected</if> >{$vo.qv_value}</option>
+            </foreach>
+        </select>
+
+        <select name="product_status" class="select_style">
+            <option value="">状态</option>
+            <option value="1" <if condition="$key_product_status eq '1'">selected</if>>发布中</option>
+            <option value="2" <if condition="$key_product_status eq '2'">selected</if>>暂停</option>
+            <option value="3" <if condition="$key_product_status eq '3'">selected</if>>已过期</option>
+        </select>
+
+        <select name="refund_type" class="select_style">
+            <option value="">还款方式</option>
+            <foreach name="refund_type" item="vo" key="key">
+                <option value="{$vo.qv_id}" <if condition="$vo.qv_id eq  $key_refund_type">selected</if> >{$vo.qv_value}</option>
+            </foreach>
+        </select>
+
+        <select name="zones" id="zones" class="select_style">
+            <option value="">适用区域</option>
+            <foreach name="zones" item="vo" key="key">
+                <option value="{$vo.z_id}">{$vo.z_name}</option>
+                <foreach name="$vo.child_values" item="vo2" key="key2">
+                    <option value="{$vo2.z_id}">└─&nbsp;&nbsp;{$vo2.z_name}</option>
+                    <foreach name="$vo2.child_values" item="vo3" key="key3">
+                        <option value="{$vo3.z_id}">&nbsp;&nbsp;└─&nbsp;&nbsp;{$vo3.z_name}</option>
+                    </foreach>
+                </foreach>
+            </foreach>
+        </select>
+
+
+        <input type="submit" class="btn btn-primary" value="搜索" />
+    </form>
+    <table class="table table-hover table-bordered">
+        <thead>
+        <tr>
+            <th width="50">ID</th>
+            <th>产品编号</th>
+            <th>服务对象</th>
+            <th>产品类型</th>
+            <th>产品名称</th>
+            <th>还款方式</th>
+            <th>利率</th>
+            <th>发布时间</th>
+            <th>有效期止</th>
+            <th>联系方式</th>
+            <th>审批周期</th>
+            <th>状态</th>
+            <th>收藏用户</th>
+            <th>浏览用户</th>
+            <th>发布人</th>
+            <th>发布人手机</th>
+            <!--<th width="130">{:lang('ACTIONS')}</th>-->
+        </tr>
+        </thead>
+        <tbody>
+        <php>$user_statuses=array("0"=>lang('USER_STATUS_BLOCKED'),"1"=>lang('USER_STATUS_ACTIVATED'),"2"=>lang('USER_STATUS_UNVERIFIED'));</php>
+        <foreach name="products" item="vo" key="key">
+            <tr>
+                <td>{$key+1}</td>
+                <td>{$vo.product_no}</td>
+                <td>{$vo.service_object}</td>
+                <td>
+                    <if condition="!empty($vo['product_type'])">
+                        {$vo.product_type}
+                    </if>
+                </td>
+                <td>{$vo.product_name}</td>
+                <td>
+                    <if condition="!empty($vo['refund_type'])">
+                        {$vo.refund_type}
+                    </if>
+                </td>
+                <td>{$vo.poundage}</td>
+                <td>{$vo.create_at}</td>
+                <td>{$vo.valid_time}</td>
+                <td>{$vo.product_contact}</td>
+                <td>{$vo.audit_cycle}</td>
+                <td id="status_{$vo.product_id}">
+                    <php>
+                        $status_mapping = array(1=>'发布中',2=>'暂停',3=>'已过期',4=>'待审核');
+                        echo $status_mapping[$vo['product_status']];
+                    </php>
+                </td>
+                <td>{$vo.view_num}</td>
+                <td>{$vo.collect_num}</td>
+                <td>{$vo.ins_name}</td>
+                <td>{$vo.ins_mobile}</td>
+                <!--<td width="180px">-->
+                    <!--<font color="#cccccc"><a href="/Admin/goods/product_detail?product_id={$vo.product_id}">查看</a></font>-->
+                    <!--<font color="#cccccc"><a href="javascript:void(0)" onclick="refresh_product({$vo.product_id})">刷新</a></font>-->
+                    <!--<font color="#cccccc"><a href="javascript:void(0)" onclick="pause_product(this,{$vo.product_id})">-->
+                        <!--<if condition="$vo.product_status eq 1">-->
+                             <!--暂停-->
+                            <!--<else>-->
+                                <!--发布-->
+                            <!--</else>-->
+                        <!--</if>-->
+                    <!--</a></font>-->
+                    <!--<font color="#cccccc"><a href="/Admin/goods/editGoods?product_id={$vo.product_id}">编辑</a></font>-->
+                    <!--<font color="#cccccc"><a href="javascript:void(0)" onclick="del_product({$vo.product_id})">删除</a></font>-->
+                <!--</td>-->
+            </tr>
+        </foreach>
+        </tbody>
+    </table>
+    <div class="pagination">{$page}</div>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
+<script type="text/javascript" src="__STATIC__/layer/layer.js"></script>
+<script>
+    var zone_id = {$key_zone};
+
+    $("#zones").val(zone_id);
+
+    function refresh_product(id) {
+        $.ajax({
+            url: "{:url('goods/refresh_product')}",
+            type: "POST",
+            data: {"product_id":id},
+            dataType: "JSON",
+            success: function (res) {
+                layer.msg(res.msg);
+            }
+        });
+    }
+
+    function pause_product(e,id) {
+        $.ajax({
+            url: "{:url('goods/pause_product')}",
+            type: "POST",
+            data: {"product_id":id},
+            dataType: "JSON",
+            success: function (res) {
+                layer.msg(res.msg);
+                if(res.code==1){
+                    var process_status = res.data.product_status;
+                    var show_str = "发布中";
+                    var btn_str = "暂停";
+
+                    if(process_status == 2){
+                        show_str = "暂停";
+                        btn_str = "发布";
+                    }
+
+                    $("#status_"+id).html(show_str);
+                    $(e).text(btn_str);
+                }
+            }
+        });
+    }
+
+    /**
+     * 删除产品
+     */
+    function del_product(product_id) {
+        layer.confirm('确定要删除吗？', {
+            btn: ['删除','取消'] //按钮
+        }, function(){
+            $.ajax({
+                url: "{:url('goods/delGoods')}",
+                type: "POST",
+                data: {"product_id":product_id},
+                dataType: "JSON",
+                success: function (res) {
+                    if(res.code == 1){
+                        layer.msg(res.msg, {icon: 1});
+                        location.href="{:url('goods/goodsList')}";
+                    }else{
+                        layer.msg(res.msg, {icon: 2});
+                    }
+                }
+            });
+        }, function(){
+            layer.close();
+        });
+    }
+</script>
+</body>
+</html>
