@@ -245,7 +245,7 @@ class GoodsController extends AdminBaseController{
         $insert_data['product_status'] = 4;
         $insert_data['create_at'] = date('Y-m-d H:i:s');
         $insert_data['update_at'] = date('Y-m-d H:i:s');
-
+        
         $insert_res = Db::name('product')->insertGetId($insert_data);
 
         $insert_query_data = array();
@@ -334,6 +334,7 @@ class GoodsController extends AdminBaseController{
         $product_query = Db::name('product_query')->where('product_id',$product_id)->select()->toArray();
 
         foreach ($product_type as &$value){
+            $value['query_values'] = array();
             foreach ($product_query as $row){
                 if($value['qt_id'] == $row['pt_id']){
                     $value['query_values'][] = array('pv_id'=>$row['pv_id'],'pv_value'=>$row['pv_value']);

@@ -334,6 +334,7 @@ class GoodsController extends InsBaseController {
         $product_query = Db::name('product_query')->where('product_id',$product_id)->select()->toArray();
 
         foreach ($product_type as &$value){
+            $value['query_values'] = array();
             foreach ($product_query as $row){
                 if($value['qt_id'] == $row['pt_id']){
                     $value['query_values'][] = array('pv_id'=>$row['pv_id'],'pv_value'=>$row['pv_value']);
