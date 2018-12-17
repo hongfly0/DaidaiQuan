@@ -270,7 +270,7 @@ hello;
      */
     public function  checkCollect($member_id,$product_id){
 
-        $info = Db::table('ddq_collect_list')->where('member_id',$member_id)->where('product_id',$product_id)->find();
+        $info = Db::name('collect_list')->where('member_id',$member_id)->where('product_id',$product_id)->find();
 
         if(empty($info)){
             return 0;

@@ -123,6 +123,12 @@ class UserController extends HomeBaseController
         foreach ($result as &$value) {
             $product_query = ProductQueryModel::where('product_id',$value['product_id'])->select()->toArray();
 
+            if(!empty($_REQUEST['member_id'])){
+                $value['collect_status'] = $this->checkCollect($_REQUEST['member_id'],$value['product_id']);
+            }else{
+                $value['collect_status'] = 0;
+            }
+
             foreach ($product_query as $row){
                 $value[$row['pt_en_name']] = $row['pv_value'];
             }
@@ -161,6 +167,12 @@ class UserController extends HomeBaseController
 
         foreach ($result as &$value) {
             $product_query = ProductQueryModel::where('product_id',$value['product_id'])->select()->toArray();
+
+            if(!empty($_REQUEST['member_id'])){
+                $value['collect_status'] = $this->checkCollect($_REQUEST['member_id'],$value['product_id']);
+            }else{
+                $value['collect_status'] = 0;
+            }
 
             foreach ($product_query as $row){
                 $value[$row['pt_en_name']] = $row['pv_value'];
