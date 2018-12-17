@@ -101,13 +101,19 @@ class UserController extends HomeBaseController
 
         $member_id = $_REQUEST['member_id'];
 
-        $collect_ids = Db::table('ddq_collect_list');
+        $collect_ids = Db::name('collect_list');
 
         $collect_ids=$collect_ids->where('member_id','=',$member_id);
 
         $collect_ids = $collect_ids->field('product_id')->order('cp_id','desc')->page($this::$page,$this::$limit)->select()->toArray();
 
-        $result = Db::table('ddq_product')
+        $msg_array = array();
+
+        $total = Db::name('collect_list')->where('member_id','=',$member_id)->distinct('product_id')->count(1);
+
+        $msg_array['total_page'] = ceil ($total/$this::$limit);
+
+        $result = Db::name('product')
             ->where('product_status','1')
             ->where('product_id','IN',array_column($collect_ids,'product_id'))
             ->field('product_id,product_name,product_image,loan_use_dor,loan_time_limit,audit_cycle,view_num')
@@ -122,7 +128,8 @@ class UserController extends HomeBaseController
             }
         }
 
-        return $this->apisucces('用户收藏列表',$result);
+
+        return $this->apisucces('用户收藏列表',$result,$msg_array);
 
     }
 
@@ -133,9 +140,15 @@ class UserController extends HomeBaseController
 
         $member_id = $_REQUEST['member_id'];
 
-        $view_ids = Db::table('ddq_view_list');
+        $view_ids = Db::name('view_list');
 
         $view_ids=$view_ids->where('member_id','=',$member_id);
+
+        $msg_array = array();
+
+        $total = Db::name('view_list')->where('member_id','=',$member_id)->distinct('product_id')->count(1);
+
+        $msg_array['total_page'] = ceil ($total/$this::$limit);
 
         $view_ids = $view_ids->field('product_id')->order('vl_id','desc')->page($this::$page,$this::$limit)->select()->toArray();
 
@@ -154,6 +167,6 @@ class UserController extends HomeBaseController
             }
         }
 
-        return $this->apisucces('用户查看历史',$result);
+        return $this->apisucces('用户查看历史',$result,$msg_array);
     }
 }

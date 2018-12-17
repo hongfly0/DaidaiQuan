@@ -47,16 +47,22 @@ class ProductController extends HomeBaseController
      */
     public function index()
     {
-        $product_ids = DB::table('ddq_product_query');
+        $product_ids = DB::name('product_query');
 
         if(!empty($this::$qv_ids)){
             $product_ids=$product_ids->where('pv_id','in',$this::$qv_ids);
         }
 
+        $msg_array = array();
+
+        $total = $product_ids->distinct('product_id')->count(1);
+
+        $msg_array['total_page'] = ceil ($total/$this::$limit);
+
         $product_ids = $product_ids->distinct(true)->field('product_id')->page($this::$page,$this::$limit)->select()->toArray();
 
-        $result = Db::table('ddq_product')
-            ->where('product_status','1');
+        $result = Db::name('product')
+        ->where('product_status','1');
 
         if($product_ids){
             $result = $result->where('product_id','IN',array_column($product_ids,'product_id'));
@@ -86,7 +92,7 @@ class ProductController extends HomeBaseController
 
         }
 
-        return $this->apisucces('product list',$result);
+        return $this->apisucces('product list',$result,$msg_array);
     }
 
 
@@ -151,14 +157,22 @@ class ProductController extends HomeBaseController
     public function agentList(){
         $product_id = $_REQUEST['product_id'];
 
-        $result = Db::table('ddq_agent')->alias('a')
+        $result = Db::name('agent')->alias('a')
             ->join('ddq_agent_product ap','ap.agent_id=a.agent_id')
             ->where('ap.product_id','=',$product_id)
             ->where('a.agent_status','=',1)
             ->field('a.agent_id,a.agent_avatar,a.agent_name,a.agent_company,a.agent_company_address,a.agent_position,a.agent_company_owner,a.agent_company_phone,a.agent_mobile,a.agent_business_scope,a.agent_zode,a.agent_status')
             ->select()->toArray();
 
-        $this->apisucces('代办人列表',$result);
+        $total = Db::name('agent')->alias('a')
+            ->join('ddq_agent_product ap','ap.agent_id=a.agent_id')
+            ->where('ap.product_id','=',$product_id)
+            ->where('a.agent_status','=',1)
+            ->count(1);
+
+        $msg_array['total_page'] = ceil ($total/$this::$limit);
+
+        $this->apisucces('代办人列表',$result,$msg_array);
     }
 
     /**

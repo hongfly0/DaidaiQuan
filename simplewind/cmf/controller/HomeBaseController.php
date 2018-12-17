@@ -235,12 +235,13 @@ hello;
      * 返回成功
      * author Fox
      */
-    public function apisucces($msg='',$result=array()){
+    public function apisucces($msg='',$result=array(),$message_array=array()){
         $return = array();
         $msg = empty($msg)?'success':$msg;
 
         $return['code'] = '1';
         $return['msg']  = $msg;
+        $return = array_merge($return,$message_array);
         $return['data'] = $result;
 
         echo json_encode($return);
