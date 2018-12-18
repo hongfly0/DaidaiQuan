@@ -28,7 +28,7 @@ class ProductController extends HomeBaseController
         parent::__construct($request);
 
         $this::$page = empty($_REQUEST['page'])?1:$_REQUEST['page'];
-        $this::$limit = empty($_REQUEST['limit'])?25:$_REQUEST['limt'];
+        $this::$limit = empty($_REQUEST['limit'])?25:$_REQUEST['limit'];
         $this::$qv_ids = empty($_REQUEST['qv_ids'])?array():implode(',',$_REQUEST['qv_ids']);
         $this::$zone_ids = empty($_REQUEST['zone_ids'])?array():$_REQUEST['zone_ids'];
         $this::$search_key = empty($_REQUEST['search_key'])?"":$_REQUEST['search_key'];

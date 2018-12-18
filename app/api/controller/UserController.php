@@ -134,7 +134,6 @@ class UserController extends HomeBaseController
             }
         }
 
-
         return $this->apisucces('用户收藏列表',$result,$msg_array);
 
     }
