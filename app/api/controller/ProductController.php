@@ -55,9 +55,9 @@ class ProductController extends HomeBaseController
 
         $msg_array = array();
 
-        $total = $product_ids->distinct('product_id')->count(1);
-
-        $msg_array['total_page'] = ceil ($total/$this::$limit);
+        $total = Db::query("SELECT  COUNT(DISTINCT product_id) AS tp_count FROM `ddq_product_query` LIMIT 1");
+        
+        $msg_array['total_page'] = ceil ($total[0]['tp_count']/$this::$limit);
 
         $product_ids = $product_ids->distinct(true)->field('product_id')->page($this::$page,$this::$limit)->select()->toArray();
 
@@ -66,30 +66,31 @@ class ProductController extends HomeBaseController
 
         if($product_ids){
             $result = $result->where('product_id','IN',array_column($product_ids,'product_id'));
-        }
 
-        if(!empty($this::$search_key)){
-            $search_key = $this::$search_key;
-            $result = $result->where(function ($query) use ($search_key){
-                $query->where('product_name','LIKE',"%$search_key%")->whereor('product_detail','LIKE',"%$search_key%");
-            });
-        }
-
-        $result = $result->select()->toArray();
-
-        foreach ($result as &$value) {
-            $product_query = ProductQueryModel::where('product_id',$value['product_id'])->select()->toArray();
-
-            foreach ($product_query as $row){
-                $value[$row['pt_en_name']] = $row['pv_value'];
+            if(!empty($this::$search_key)){
+                $search_key = $this::$search_key;
+                $result = $result->where(function ($query) use ($search_key){
+                    $query->where('product_name','LIKE',"%$search_key%")->whereor('product_detail','LIKE',"%$search_key%");
+                });
             }
 
-            if(!empty($_REQUEST['member_id'])){
-                $value['collect_status'] = $this->checkCollect($_REQUEST['member_id'],$value['product_id']);
-            }else{
-                $value['collect_status'] = 0;
-            }
+            $result = $result->select()->toArray();
 
+            foreach ($result as &$value) {
+                $product_query = ProductQueryModel::where('product_id',$value['product_id'])->select()->toArray();
+
+                foreach ($product_query as $row){
+                    $value[$row['pt_en_name']] = $row['pv_value'];
+                }
+
+                if(!empty($_REQUEST['member_id'])){
+                    $value['collect_status'] = $this->checkCollect($_REQUEST['member_id'],$value['product_id']);
+                }else{
+                    $value['collect_status'] = 0;
+                }
+            }
+        }else{
+            $result = array();
         }
 
         return $this->apisucces('product list',$result,$msg_array);
