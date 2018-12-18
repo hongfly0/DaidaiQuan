@@ -56,7 +56,7 @@ class ProductController extends HomeBaseController
         $msg_array = array();
 
         $total = Db::query("SELECT  COUNT(DISTINCT product_id) AS tp_count FROM `ddq_product_query` LIMIT 1");
-        
+
         $msg_array['total_page'] = ceil ($total[0]['tp_count']/$this::$limit);
 
         $product_ids = $product_ids->distinct(true)->field('product_id')->page($this::$page,$this::$limit)->select()->toArray();

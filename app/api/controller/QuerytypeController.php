@@ -35,6 +35,9 @@ class QuerytypeController extends HomeBaseController
 
         $zone_list = ZoneModel::field('z_id,z_name,z_pid')->select()->toArray();
 
+        array_unshift($type_list,array('qt_id'=>0,'qt_en_name'=>'service_object','qt_name'=>'服务对象','values'=>array(array('qv_id'=>'service_object_1','qt_id'=>0,'qv_value'=>'对公'),array('qv_id'=>'service_object_2','qt_id'=>0,'qv_value'=>'对私'))));
+
+
         $this->apisucces('筛选条件列表',array('query_list'=>$type_list,'zone_list'=>$zone_list));
     }
 }

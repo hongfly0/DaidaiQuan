@@ -166,7 +166,7 @@ class PublicController extends AdminBaseController
         if (!$info) {
             echo  json_encode(array('code'=>-1,'msg'=>$upload->getError()));
         } else {
-            echo json_encode(array('code'=>0,'msg'=>'success','data'=>array('src'=>$info['url'])));
+            echo json_encode(array('code'=>0,'msg'=>'success','data'=>array('src'=>config('base_url').$info['url'])));
         }
     }
 }
