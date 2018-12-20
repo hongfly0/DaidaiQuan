@@ -29,7 +29,7 @@ class ProductController extends HomeBaseController
 
         $this::$page = empty($_REQUEST['page'])?1:$_REQUEST['page'];
         $this::$limit = empty($_REQUEST['limit'])?25:$_REQUEST['limit'];
-        $this::$qv_ids = empty($_REQUEST['qv_ids'])?array():implode(',',$_REQUEST['qv_ids']);
+        $this::$qv_ids = empty($_REQUEST['qv_ids'])?array():explode(',',$_REQUEST['qv_ids']);
         $this::$zone_ids = empty($_REQUEST['zone_ids'])?array():$_REQUEST['zone_ids'];
         $this::$search_key = empty($_REQUEST['search_key'])?"":$_REQUEST['search_key'];
     }
@@ -49,7 +49,17 @@ class ProductController extends HomeBaseController
     {
         $product_ids = DB::name('product_query');
 
+        $service_object_condition = array();
+
         if(!empty($this::$qv_ids)){
+            foreach ($this::$qv_ids as $id){
+                if($id == 'service_object_1'){
+                    $service_object_condition[] = '对公';
+                }elseif ($id == 'service_object_2'){
+                    $service_object_condition[] = '对私';
+                }
+            }
+
             $product_ids=$product_ids->where('pv_id','in',$this::$qv_ids);
         }
 
@@ -63,6 +73,10 @@ class ProductController extends HomeBaseController
 
         $result = Db::name('product')
         ->where('product_status','1');
+
+        if(!empty($service_object_condition)){
+            $result = $result->whereIn('service_object',$service_object_condition);
+        }
 
         if($product_ids){
             $result = $result->where('product_id','IN',array_column($product_ids,'product_id'));
