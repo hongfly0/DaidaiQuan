@@ -52,15 +52,21 @@ class ProductController extends HomeBaseController
         $service_object_condition = array();
 
         if(!empty($this::$qv_ids)){
-            foreach ($this::$qv_ids as $id){
+            foreach ($this::$qv_ids as $key=>$id){
                 if($id == 'service_object_1'){
                     $service_object_condition[] = '对公';
+                    unset($this::$qv_ids[$key]);
                 }elseif ($id == 'service_object_2'){
                     $service_object_condition[] = '对私';
+                    unset($this::$qv_ids[$key]);
+                }elseif(empty($id) || $id == ''){
+                    unset($this::$qv_ids[$key]);
                 }
             }
 
-            $product_ids=$product_ids->where('pv_id','in',$this::$qv_ids);
+            if(!empty($this::$qv_ids)){
+                $product_ids=$product_ids->where('pv_id','in',$this::$qv_ids);
+            }
         }
 
         $msg_array = array();
@@ -89,7 +95,7 @@ class ProductController extends HomeBaseController
             }
 
             $result = $result->select()->toArray();
-
+            
             foreach ($result as &$value) {
                 $product_query = ProductQueryModel::where('product_id',$value['product_id'])->select()->toArray();
 
