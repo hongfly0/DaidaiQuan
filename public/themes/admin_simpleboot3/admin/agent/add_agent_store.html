@@ -84,6 +84,19 @@
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">
+                                <span class="form-required">*</span>头像</label>
+
+                            </label>
+                            <div class="col-md-6 col-sm-10">
+                                <img class="avatar" id="img_upload5" src="__STATIC__/images/load_img.png"
+                                     data-agent_business_license_img="" style="float: left">
+                                <button type="button" class="layui-btn" id="upload5" style="width: 120px;margin-left: 10px;margin-top: 20px">
+                                    <i class="layui-icon">&#xe67c;</i>上传图片
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">
                                 </span>{:lang('COMPANY_NAME')}</label>
 
                             </label>
@@ -269,6 +282,19 @@
                 //请求异常回调
             }
         });
+
+        //代理人头像
+        var uploadInst5 = upload.render({
+            elem: '#upload5' //绑定元素
+            , url: '/admin/public/upload_img' //上传接口
+            , done: function (res) {
+                $("#img_upload5").attr('src', res.data.url);
+                $("#img_upload5").data('agent_avatar', res.data.url);
+            }
+            , error: function () {
+                //请求异常回调
+            }
+        });
     });
 
     //到期日期
@@ -297,7 +323,9 @@
                 agent_business_license_img = $("#img_upload1").data('agent_business_license_img'),
                 agent_ID_card_postitive = $("#img_upload2").data('agent_ID_card_postitive'),
                 agent_ID_card_back = $("#img_upload3").data('agent_ID_card_back'),
-                agent_hand_idcard = $("#img_upload4").data('agent_hand_idcard');
+                agent_hand_idcard = $("#img_upload4").data('agent_hand_idcard'),
+                agent_avatar = $("#img_upload5").data('agent_avatar')
+                ;
 
             var product_nums =[];
             $("input[name='product_num']").each(function(){
@@ -317,7 +345,8 @@
                 "agent_ID_card_postitive": agent_ID_card_postitive,
                 "agent_ID_card_back": agent_ID_card_back,
                 "agent_hand_idcard": agent_hand_idcard,
-                "product_nums": product_nums
+                "product_nums": product_nums,
+                "agent_avatar" :agent_avatar
             };
 
             $.ajax({

@@ -86,7 +86,10 @@ class AgentController extends AdminBaseController
             return  $this->apifailed('账户已存在',array(),'-2');
         }
 
+
         $data['create_at'] = date('Y-m-d H:i:s');
+        $data['agent_avatar'] = empty($data['agent_avatar'])?'/static/images/load_img.png':$data['agent_avatar'];
+
         $agent = Db::table('ddq_agent')->insert($data);
         $agentId = Db::name('ddq_agent')->getLastInsID();
 
@@ -191,6 +194,8 @@ class AgentController extends AdminBaseController
         unset($data['product_nums']);
 
         $data['create_at'] = date('Y-m-d H:i:s');
+        $data['agent_avatar'] = empty($data['agent_avatar'])?'/static/images/load_img.png':$data['agent_avatar'];
+
         $agent = Db::table('ddq_agent')->where('agent_id',$agent_id)->update($data);
 
         if($agent){

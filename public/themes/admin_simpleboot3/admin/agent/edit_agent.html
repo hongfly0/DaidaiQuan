@@ -84,6 +84,25 @@
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">
+                                头像</label>
+                            </label>
+                            <div class="col-md-6 col-sm-10">
+                                <if condition="$agent.agent_avatar neq ''" >
+                                    <img class="avatar" id="img_upload5" src="{$agent.agent_avatar}"
+                                         data-agent_business_license_img="" style="float: left" data-product_image="{$agent.agent_avatar}">
+                                    <else>
+                                        <img class="avatar" id="img_upload5" src="__STATIC__/images/load_img.png"
+                                             data-agent_business_license_img="" style="float: left">
+                                    </else>
+                                </if>
+
+                                <button type="button" class="layui-btn" id="upload5" style="width: 120px;margin-left: 10px;margin-top: 20px">
+                                    <i class="layui-icon">&#xe67c;</i>上传图片
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">
                                 </span>{:lang('COMPANY_NAME')}</label>
 
                             </label>
