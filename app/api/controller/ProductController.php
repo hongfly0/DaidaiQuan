@@ -75,7 +75,9 @@ class ProductController extends HomeBaseController
 
         $msg_array['total_page'] = ceil ($total[0]['tp_count']/$this::$limit);
 
-        $product_ids = $product_ids->distinct(true)->field('product_id')->page($this::$page,$this::$limit)->select()->toArray();
+        $product_ids = $product_ids->alias('pq')
+                        ->join('product p','pq.product_id = p.product_id')
+                        ->distinct(true)->field('pq.product_id')->page($this::$page,$this::$limit)->select()->toArray();
 
         $result = Db::name('product')
         ->where('product_status','1');
@@ -95,7 +97,7 @@ class ProductController extends HomeBaseController
             }
 
             $result = $result->select()->toArray();
-            
+
             foreach ($result as &$value) {
                 $product_query = ProductQueryModel::where('product_id',$value['product_id'])->select()->toArray();
 
