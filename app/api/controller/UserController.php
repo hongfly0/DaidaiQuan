@@ -57,10 +57,10 @@ class UserController extends HomeBaseController
 
         $wx_user_info = $WXBizDataCrypt->decryptData($encryptedData,$iv,$data);
 
-        $wx_user_data = json_decode($wx_user_info);
+        $wx_user_data = json_decode($wx_user_info,true);
 
-        $memger_info->member_name = $wx_user_data->nickName;
-        $memger_info->member_avatar_url = $wx_user_data->avatarUrl;
+        $memger_info->member_name = empty($wx_user_data['nickName'])?date('YmdHis'):$wx_user_data['nickName'];
+        $memger_info->member_avatar_url = $wx_user_data['avatarUrl'];
         $memger_info->updated_at = date('Y-m-d H:i:s');
         $memger_info->save();
 
