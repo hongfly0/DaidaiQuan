@@ -50,7 +50,7 @@
         </select>
 
         <select name="zones" id="zones" class="select_style">
-            <option value="">适用区域</option>
+            <option value="0">适用区域</option>
             <foreach name="zones" item="vo" key="key">
                 <option value="{$vo.z_id}">{$vo.z_name}</option>
                 <foreach name="$vo.child_values" item="vo2" key="key2">
@@ -121,7 +121,29 @@
                 <td>{$vo.collect_num}</td>
                 <td>{$vo.ins_name}</td>
                 <td>{$vo.ins_mobile}</td>
-                <th>{$vo.set_hot}  {$vo.set_top}</th>
+                <td>
+                    <font color="#cccccc">
+                        <a href="javascript:void(0)" onclick="pause_hot(this,{$vo.product_id})">
+                            <if condition="$vo.set_hot eq 1">
+                                取消热门
+                                <else>
+                                    热门
+                                </else>
+                            </if>
+                        </a>
+                    </font>
+                    &nbsp;&nbsp;
+                    <font color="#cccccc">
+                        <a href="javascript:void(0)" onclick="pause_top(this,{$vo.product_id})">
+                        <if condition="$vo.set_top eq 1">
+                            取消置顶
+                            <else>
+                                置顶
+                            </else>
+                        </if>
+                        </a>
+                    </font>
+                </td>
                 <td width="180px">
                     <font color="#cccccc"><a href="/Admin/goods/product_detail?product_id={$vo.product_id}">查看</a></font>
                     <font color="#cccccc"><a href="javascript:void(0)" onclick="refresh_product({$vo.product_id})">刷新</a></font>
@@ -181,6 +203,50 @@
                     }
 
                     $("#status_"+id).html(show_str);
+                    $(e).text(btn_str);
+                }
+            }
+        });
+    }
+
+    function pause_top(e,id) {
+        $.ajax({
+            url: "{:url('goods/pause_top')}",
+            type: "POST",
+            data: {"product_id":id},
+            dataType: "JSON",
+            success: function (res) {
+                layer.msg(res.msg);
+                if(res.code==1){
+                    var process_status = res.data.set_top;
+                    var btn_str = "取消置顶";
+
+                    if(process_status == 0){
+                        btn_str = "置顶";
+                    }
+
+                    $(e).text(btn_str);
+                }
+            }
+        });
+    }
+
+    function pause_hot(e,id) {
+        $.ajax({
+            url: "{:url('goods/pause_hot')}",
+            type: "POST",
+            data: {"product_id":id},
+            dataType: "JSON",
+            success: function (res) {
+                layer.msg(res.msg);
+                if(res.code==1){
+                    var process_status = res.data.set_hot;
+                    var btn_str = "取消热门";
+
+                    if(process_status == 0){
+                        btn_str = "热门";
+                    }
+
                     $(e).text(btn_str);
                 }
             }
