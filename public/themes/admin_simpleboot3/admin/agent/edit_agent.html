@@ -320,6 +320,19 @@
                 //请求异常回调
             }
         });
+
+        //代理人头像
+        var uploadInst5 = upload.render({
+            elem: '#upload5' //绑定元素
+            , url: '/admin/public/upload_img' //上传接口
+            , done: function (res) {
+                $("#img_upload5").attr('src', res.data.url);
+                $("#img_upload5").data('agent_avatar', res.data.url);
+            }
+            , error: function () {
+                //请求异常回调
+            }
+        });
     });
 
     //到期日期
