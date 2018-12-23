@@ -59,8 +59,10 @@ class UserController extends HomeBaseController
 
         $wx_user_data = json_decode($wx_user_info,true);
 
-        $memger_info->member_name = empty($wx_user_data['nickName'])?date('YmdHis'):$wx_user_data['nickName'];
-        $memger_info->member_avatar_url = $wx_user_data['avatarUrl'];
+        if(empty($memger_info->member_avatar_url)){
+            $memger_info->member_name = empty($wx_user_data['nickName'])?date('YmdHis'):$wx_user_data['nickName'];
+            $memger_info->member_avatar_url = $wx_user_data['avatarUrl'];
+        }
         $memger_info->updated_at = date('Y-m-d H:i:s');
         $memger_info->save();
 
@@ -179,5 +181,31 @@ class UserController extends HomeBaseController
         }
 
         return $this->apisucces('用户查看历史',$result,$msg_array);
+    }
+
+    /**
+     * 获取手机
+     */
+    public function getUserPhone(){
+        $member_id = $this->request->param('member_id');
+        $session_key= $this->request->param('session_key');
+        $iv = $this->request->param('iv');
+        $encryptedData = $this->request->param('encryptedData');
+
+        $WXBizDataCrypt = New WXBizDataCrypt(config('app_id'),$session_key);
+
+        $wx_user_info = $WXBizDataCrypt->decryptData($encryptedData,$iv,$data);
+
+        $wx_user_data = json_decode($wx_user_info,true);
+
+        $update['member_mobile'] = $wx_user_data['phoneNumber'];
+
+        $res = Db::name('member')->where('member_id',$member_id)->update($update);
+
+        if($res){
+            return $this->apisucces('获取手机号码成功');
+        }else{
+            return $this->apifailed('获取手机号码失败');
+        }
     }
 }

@@ -96,7 +96,7 @@ class GoodsController extends AdminBaseController{
             }
             $result[]= $val;
         }
-        
+
         //获取产品类型
         $product_types=Db::name('query_value')->where('qt_id',1)->select()->toArray();
         //还款方式
