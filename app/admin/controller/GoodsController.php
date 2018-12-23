@@ -114,7 +114,7 @@ class GoodsController extends AdminBaseController{
         $this->assign('key_refund_type',$refund_type);
         $this->assign('key_ins_mobile',$ins_mobile);
         $this->assign('key_product_type',$product_type);
-        $this->assign('key_zone',$zone);
+        $this->assign('key_zone',empty($zone)?"0":$zone);
         $this->assign('key_service_object',$service_object);
         $this->assign('key_product_status',$product_status);
         $this->assign('key_word',$key_word);
@@ -315,6 +315,58 @@ class GoodsController extends AdminBaseController{
 
         if($res){
             return $this->apisucces('更改成功',array('product_status'=>$update_product_status));
+        }else{
+            return $this->apifailed('更改失败');
+        }
+    }
+
+    /*
+    * 暂停
+    */
+    public function pause_top(){
+        if(empty($_REQUEST['product_id'])){
+            return  $this->apifailed('产品id不能为空');
+        }
+        $product_id = $_REQUEST['product_id'];
+
+        $set_top  = Db::name('product')->where('product_id',$product_id)->value('set_top');
+
+        if($set_top==0){
+            $update_set_top = 1;
+        }elseif ($set_top == 1){
+            $update_set_top = 0;
+        }
+
+        $res = Db::name('product')->where('product_id',$product_id)->update(array('set_top'=>$update_set_top));
+
+        if($res){
+            return $this->apisucces('更改成功',array('set_top'=>$update_set_top));
+        }else{
+            return $this->apifailed('更改失败');
+        }
+    }
+
+    /*
+    * 暂停
+    */
+    public function pause_hot(){
+        if(empty($_REQUEST['product_id'])){
+            return  $this->apifailed('产品id不能为空');
+        }
+        $product_id = $_REQUEST['product_id'];
+
+        $set_hot  = Db::name('product')->where('product_id',$product_id)->value('set_hot');
+
+        if($set_hot==0){
+            $update_set_hot = 1;
+        }elseif ($set_hot == 1){
+            $update_set_hot = 0;
+        }
+
+        $res = Db::name('product')->where('product_id',$product_id)->update(array('set_hot'=>$update_set_hot));
+
+        if($res){
+            return $this->apisucces('更改成功',array('set_hot'=>$update_set_hot));
         }else{
             return $this->apifailed('更改失败');
         }
