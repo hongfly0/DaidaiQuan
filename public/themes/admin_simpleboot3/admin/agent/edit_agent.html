@@ -370,8 +370,6 @@
                 product_nums.push($(this).val());
             });
 
-            console.log(product_nums);
-
             var data = {
                 "agent_name": agent_name,
                 "agent_company": agent_company,
@@ -389,9 +387,7 @@
                 "agent_id" : agent_id,
                 "agent_avatar":agent_avatar
             };
-
-            console.log(data);return false;
-
+            
             $.ajax({
                 url: "{:url('Agent/post_edit_agent_store')}",
                 type: "POST",
