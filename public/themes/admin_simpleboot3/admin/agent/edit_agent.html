@@ -89,7 +89,7 @@
                             <div class="col-md-6 col-sm-10">
                                 <if condition="$agent.agent_avatar neq ''" >
                                     <img class="avatar" id="img_upload5" src="{$agent.agent_avatar}"
-                                         data-agent_business_license_img="" style="float: left" data-product_image="{$agent.agent_avatar}">
+                                         data-agent_business_license_img="" style="float: left" data-agent_avatar="{$agent.agent_avatar}">
                                     <else>
                                         <img class="avatar" id="img_upload5" src="__STATIC__/images/load_img.png"
                                              data-agent_business_license_img="" style="float: left">
@@ -362,7 +362,8 @@
                 agent_ID_card_postitive = $("#img_upload2").data('agent_ID_card_postitive'),
                 agent_ID_card_back = $("#img_upload3").data('agent_ID_card_back'),
                 agent_hand_idcard = $("#img_upload4").data('agent_hand_idcard'),
-                    agent_id = $("#agent_id").val();
+                agent_avatar = $("#img_upload5").data('agent_avatar'),
+                agent_id = $("#agent_id").val();
 
             var product_nums =[];
             $("input[name='product_num']").each(function(){
@@ -385,8 +386,11 @@
                 "agent_ID_card_back": agent_ID_card_back,
                 "agent_hand_idcard": agent_hand_idcard,
                 "product_nums": product_nums,
-                "agent_id" : agent_id
+                "agent_id" : agent_id,
+                "agent_avatar":agent_avatar
             };
+
+            console.log(data);return false;
 
             $.ajax({
                 url: "{:url('Agent/post_edit_agent_store')}",

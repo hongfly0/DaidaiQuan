@@ -25,7 +25,7 @@ class MemberController extends AdminBaseController
         $member_name = empty($_REQUEST['member_name'])?'':$_REQUEST['member_name'];
 
         if($member_name){
-            $where .= " and member_name LIKE '%$member_name%' ";
+            $where .= " and member_name LIKE '%$member_name%' or member_mobile LIKE '%$member_name%' ";
         }
 
         $members = Db::name('member')

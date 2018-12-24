@@ -7,7 +7,7 @@
 		</ul>
         <form class="well form-inline margin-top-20" method="post" action="{:url('member/index')}">
             微信用户名:
-            <input type="text" class="form-control" name="member_name" style="width: 200px;" value="{$member_name}" placeholder="请输入微信用户名">
+            <input type="text" class="form-control" name="member_name" style="width: 200px;" value="{$member_name}" placeholder="请输入微信用户名/手机号码">
             <input type="submit" class="btn btn-primary" value="搜索" />
         </form>
 		<table class="table table-hover table-bordered">
@@ -16,6 +16,7 @@
 					<th width="50">ID</th>
 					<th>微信用户名</th>
 					<th>微信头像</th>
+					<th>手机号码</th>
 					<th>注册时间</th>
 					<th>最近登录时间</th>
 					<th>收藏</th>
@@ -28,6 +29,7 @@
 						<td>{$key+1}</td>
 						<td>{$vo.member_name}</td>
 						<td><img src="{$vo.member_avatar_url}" width="50px" height="50px"></td>
+						<td>{$vo.member_mobile}</td>
 						<td>{$vo.created_at}</td>
 						<td>{$vo.updated_at}</td>
 						<td><a href="/admin/member/collect_list?member_id={$vo.member_id}">{$vo.collect_num}</a></td>
