@@ -117,8 +117,8 @@
                         echo $status_mapping[$vo['product_status']];
                     </php>
                 </td>
-                <td>{$vo.view_num}</td>
-                <td>{$vo.collect_num}</td>
+                <td><a href="javascript:void(0)" class="change_num" data-product_id="{$vo.product_id}" data-view_num="{$vo.view_num}">{$vo.view_num}</a></td>
+                <td><a href="javascript:void(0)" class="change_num" data-product_id="{$vo.product_id}" data-collect_num="{$vo.collect_num}">{$vo.collect_num}</a></td>
                 <td>{$vo.ins_name}</td>
                 <td>{$vo.ins_mobile}</td>
                 <td>
@@ -208,6 +208,14 @@
             }
         });
     }
+
+    $(".change_num").click(function ($this) {
+        layer.prompt({title: '输入任何口令，并确认', formType: 1}, function(pass, index){
+            alert(111);
+            layer.close(index);
+        });
+    });
+
 
     function pause_top(e,id) {
         $.ajax({
