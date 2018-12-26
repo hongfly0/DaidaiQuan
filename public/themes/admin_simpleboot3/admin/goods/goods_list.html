@@ -80,8 +80,8 @@
             <th>联系方式</th>
             <th>审批周期</th>
             <th>状态</th>
-            <th>收藏用户</th>
             <th>浏览用户</th>
+            <th>收藏用户</th>
             <th>发布人</th>
             <th>发布人手机</th>
             <th>热门置顶</th>
@@ -117,8 +117,8 @@
                         echo $status_mapping[$vo['product_status']];
                     </php>
                 </td>
-                <td><a href="javascript:void(0)" class="change_num" data-product_id="{$vo.product_id}" data-view_num="{$vo.view_num}">{$vo.view_num}</a></td>
-                <td><a href="javascript:void(0)" class="change_num" data-product_id="{$vo.product_id}" data-collect_num="{$vo.collect_num}">{$vo.collect_num}</a></td>
+                <td><a href="javascript:void(0)" class="change_num" data-product_id="{$vo.product_id}" data-value="{$vo.view_num}" data-type="view_num">{$vo.view_num}</a></td>
+                <td><a href="javascript:void(0)" class="change_num" data-product_id="{$vo.product_id}" data-value="{$vo.collect_num}" data-type="collect_num">{$vo.collect_num}</a></td>
                 <td>{$vo.ins_name}</td>
                 <td>{$vo.ins_mobile}</td>
                 <td>
@@ -209,10 +209,44 @@
         });
     }
 
-    $(".change_num").click(function ($this) {
-        layer.prompt({title: '输入任何口令，并确认', formType: 1}, function(pass, index){
-            alert(111);
-            layer.close(index);
+    $(".change_num").click(function () {
+        var title="",
+            product_id = $(this).data('product_id'),
+            old_value = $(this).data('value'),
+            type = $(this).data('type');
+
+        var this_old = $(this);
+
+        if(type =='view_num'){
+            title = '查看数量';
+        }else{
+            title = '收藏數量';
+        }
+
+        layer.prompt({
+            formType: 0,
+            value: $(this).data('value'),
+            title: title
+        }, function(value, index, elem){
+            if(value == old_value){
+                layer.close(index);
+            }else{
+                var data = {"product_id":product_id,'value':value,'type':type};
+
+                $.ajax({
+                    url: "{:url('goods/change_num')}",
+                    type: "GET",
+                    data: data,
+                    dataType: "JSON",
+                    success: function (res) {
+                        layer.msg(res.msg);
+                        if(res.code==1){
+                            this_old.text(value);
+                            layer.close(index);
+                        }
+                    }
+                });
+            }
         });
     });
 

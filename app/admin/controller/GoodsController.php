@@ -628,4 +628,24 @@ class GoodsController extends AdminBaseController{
 
         return $zone_p1;
     }
+
+    /**
+     * 修改浏览量和收藏量
+     */
+    public function change_num(){
+        $type = $this->request->param('type');
+        $value = $this->request->param('value');
+        $product_id = $this->request->param('product_id');
+
+
+        $update_data[$type] = $value;
+
+        $res = Db::name('product')->where('product_id',$product_id)->update($update_data);
+
+        if($res){
+            return  $this->apisucces('更新成功');
+        }else{
+            return $this->apifailed('更新失败');
+        }
+    }
 }
