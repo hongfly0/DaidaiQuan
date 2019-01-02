@@ -80,13 +80,13 @@ class UserController extends HomeBaseController
      */
     public function info()
     {
-        if(empty($_REQUEST['open_id'])){
+        if(empty($_REQUEST['openid'])){
             return $this->apifailed('缺少必要参数:用戶openid');
         }
 
         $nickname = empty($_REQUEST['nickName'])?'':$_REQUEST['nickName'];
         $avatar = empty($_REQUEST['member_avatar_url'])?'':$_REQUEST['member_avatar_url'];
-        $openid = $_REQUEST['open_id'];
+        $openid = $_REQUEST['openid'];
 
         $info = MemberModel::get(array('openid'=>$openid));
 
