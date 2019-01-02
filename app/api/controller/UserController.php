@@ -80,20 +80,34 @@ class UserController extends HomeBaseController
      */
     public function info()
     {
-        $wxtoken = $_REQUEST['wxtoken'];
+        if(empty($_REQUEST['open_id'])){
+            return $this->apifailed('缺少必要参数:用戶openid');
+        }
 
-        $info = MemberModel::get(array('member_wx_token'=>$wxtoken));
+        $nickname = empty($_REQUEST['nickName'])?'':$_REQUEST['nickName'];
+        $avatar = empty($_REQUEST['member_avatar_url'])?'':$_REQUEST['member_avatar_url'];
+        $openid = $_REQUEST['open_id'];
+
+        $info = MemberModel::get(array('openid'=>$openid));
 
         if(!$info){
-            $this->apifailed('用户不存在');
-        }else{
-            $side_info = Db::table('ddq_option')->where('option_name','=','site_info')->find();
+            $uid = MemberModel::create([
+                'member_name' => $nickname,
+                'member_avatar_url' => $avatar,
+                'openid' => $openid,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
 
-            $info['side_setting'] = json_decode($side_info['option_value']);
-            $info['side_setting']->site_customer_service_phone = config('site_customer_service_phone');
-
-            $this->apisucces('用户基本信息',$info);
+            $info = MemberModel::get(array('openid'=>$openid));
         }
+
+        $side_info = Db::table('ddq_option')->where('option_name','=','site_info')->find();
+
+        $info['side_setting'] = json_decode($side_info['option_value']);
+        $info['side_setting']->site_customer_service_phone = config('site_customer_service_phone');
+
+        $this->apisucces('用户基本信息',$info);
     }
 
     /**
