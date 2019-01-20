@@ -21,5 +21,9 @@ return [
     'access_token_url' => "https://api.weixin.qq.com/cgi-bin/token?" ."grant_type=client_credential&appid=%s&secret=%s",
 
     'site_customer_service_phone' => '0775-7767564',
-    'base_url' => 'https://web.daidaiquan.cn/'
+    'base_url' => 'https://web.daidaiquan.cn/',
+
+     //网页端第三方登录信息
+    'web_appid' => 'wx2bd6ef86f568c493',
+    'web_appsecret' => '293edb8094c78b91f5d9455ec556d96d'
 ];

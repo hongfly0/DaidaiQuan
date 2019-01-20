@@ -222,4 +222,20 @@ class UserController extends HomeBaseController
             return $this->apifailed('获取手机号码失败');
         }
     }
+
+    /**
+     *网页端获取用户信息
+     */
+    public function getWebUserInfo()
+    {
+        $code = $this->request->param('code');
+
+        $WxToken = new WxToken($code);
+
+        $memger_info = $WxToken->get();
+
+
+
+
+    }
 }

@@ -10,13 +10,18 @@ class WxToken extends Token {
     protected $AppSecret;
     protected $LoginUrl;
 
-    public function __construct($code) {
+    public function __construct($code,$type='app') {
         $this->code = $code;
 
         //从服务器换取 openid 需要传递三个参数
         // Appid、Appsecret、Code
-        $this->Appid = config('app_id');
-        $this->AppSecret = config('app_secret');
+        if($type=='web'){
+            $this->Appid = config('web_appid');
+            $this->AppSecret = config('web_appsecret');
+        }else{
+            $this->Appid = config('app_id');
+            $this->AppSecret = config('app_secret');
+        }
 
         //sprintf的作用是将字符串中占位符用特定值按顺序替换
         $this->LoginUrl = sprintf(config('login_url'), $this->Appid, $this->AppSecret, $this->code);
