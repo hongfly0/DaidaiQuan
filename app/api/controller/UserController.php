@@ -53,6 +53,8 @@ class UserController extends HomeBaseController
 
         $memger_info = $WxToken->get();
 
+        unset($memger_info->access_token);
+
         $WXBizDataCrypt = New WXBizDataCrypt(config('app_id'),$memger_info->session_key);
 
         $wx_user_info = $WXBizDataCrypt->decryptData($encryptedData,$iv,$data);
