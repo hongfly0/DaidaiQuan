@@ -68,7 +68,7 @@ class WxToken extends Token {
         }
         //存入缓存 key：生成返回客户端的令牌 value：openid + uid
         $key = $this->generateToken($uid);
-        $user->wx_key = $key;
+        $user->wx_key = empty($key)?'':$key;
         $user->updated_at = date('Y-m-d H:i:s');
         $user->save();
 
