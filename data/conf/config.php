@@ -24,6 +24,8 @@ return [
     'base_url' => 'https://web.daidaiquan.cn/',
 
      //网页端第三方登录信息
+    'web_get_access_token' => "https://api.weixin.qq.com/sns/oauth2/access_token?" ."appid=%s&secret=%s&code=%s&grant_type=authorization_code",
+    'web_get_user_info' => "https://api.weixin.qq.com/sns/userinfo?"."access_token=%s&openid=%s",
     'web_appid' => 'wx2bd6ef86f568c493',
     'web_appsecret' => '293edb8094c78b91f5d9455ec556d96d'
 ];

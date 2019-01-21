@@ -230,12 +230,33 @@ class UserController extends HomeBaseController
     {
         $code = $this->request->param('code');
 
-        $WxToken = new WxToken($code);
+        $WxToken = new WxToken($code,'web');
 
         $memger_info = $WxToken->get();
 
+        $get_user_url = "https://api.weixin.qq.com/sns/userinfo?access_token=".$memger_info->access_token."&openid=".$memger_info->openid;
 
+        $user_info = cmf_curl_get($get_user_url);
 
+        $user_info = json_decode($user_info,true);
 
+        $update_user_data = array();
+
+        if(empty($memger_info->name)){
+            $memger_info->member_name = $user_info['nickname'];
+            $memger_info->member_avatar_url = $user_info['headimgurl'];
+
+            $update_user_data['member_name'] = $user_info['nickname'];
+            $update_user_data['member_avatar_url'] = $user_info['headimgurl'];
+            $res = MemberModel::where('openid', $memger_info->openid)->save($update_user_data);
+        }
+
+        $info = json_decode(json_encode($memger_info),true);
+
+        $side_info = Db::table('ddq_option')->where('option_name','=','site_info')->find();
+        $info['side_setting'] = json_decode($side_info['option_value']);
+        $info['side_setting']->site_customer_service_phone = config('site_customer_service_phone');
+
+        return  $this->apisucces('网页端用户信息',$info);
     }
 }
