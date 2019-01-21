@@ -232,9 +232,11 @@ class UserController extends HomeBaseController
 
         $WxToken = new WxToken($code,'web');
 
-        $memger_info = $WxToken->get();
+        $member_info = $WxToken->get();
 
-        $get_user_url = "https://api.weixin.qq.com/sns/userinfo?access_token=".$memger_info->access_token."&openid=".$memger_info->openid;
+        $info = json_decode(json_encode($member_info),true);
+
+        $get_user_url = "https://api.weixin.qq.com/sns/userinfo?access_token=".$member_info->access_token."&openid=".$member_info->openid;
 
         $user_info = cmf_curl_get($get_user_url);
 
@@ -242,16 +244,14 @@ class UserController extends HomeBaseController
 
         $update_user_data = array();
 
-        if(empty($memger_info->name)){
-            $memger_info->member_name = $user_info['nickname'];
-            $memger_info->member_avatar_url = $user_info['headimgurl'];
+        if(empty($member_info->name)){
+            $info['member_name'] = $user_info['nickname'];
+            $info['member_avatar_url'] = $user_info['headimgurl'];
 
             $update_user_data['member_name'] = $user_info['nickname'];
             $update_user_data['member_avatar_url'] = $user_info['headimgurl'];
-            $res = MemberModel::where('openid', $memger_info->openid)->save($update_user_data);
+            $res = Db::name('member')->where('openid', $member_info->openid)->update($update_user_data);
         }
-
-        $info = json_decode(json_encode($memger_info),true);
 
         $side_info = Db::table('ddq_option')->where('option_name','=','site_info')->find();
         $info['side_setting'] = json_decode($side_info['option_value']);
