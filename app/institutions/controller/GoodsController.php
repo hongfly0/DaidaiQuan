@@ -32,7 +32,7 @@ class GoodsController extends InsBaseController {
         $product_type = empty($this->request->param('product_type'))?'':$this->request->param('product_type');
         $product_status = empty($this->request->param('product_status'))?'':$this->request->param('product_status');
         $refund_type = empty($this->request->param('refund_type'))?'':$this->request->param('refund_type');
-        $zone = empty($this->request->param('zones'))?'':$this->request->param('zones');
+        $zone = empty($this->request->param('zones'))?'999':$this->request->param('zones');
 
 
         if ($key_word) {
