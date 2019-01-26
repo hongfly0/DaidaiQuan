@@ -26,9 +26,6 @@ class InsBaseController extends BaseController
         if (!empty($INS_ID)) {
             $user = Db::name('institutions')->where(['ins_id' => $INS_ID])->find();
 
-            if (!$this->checkAccess($INS_ID)) {
-                $this->error("您没有访问权限！");
-            }
             $this->assign("institutions", $user);
         } else {
             if ($this->request->isPost()) {

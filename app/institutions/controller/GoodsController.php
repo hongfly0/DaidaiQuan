@@ -475,4 +475,27 @@ class GoodsController extends InsBaseController {
 
         return $zone_p1;
     }
+
+    //返回区域
+    public function getZone(){
+        $where = '1=1 and z_pid=0';
+
+        $zone_p1 = Db::name('zone')
+            ->where($where)
+            ->order("z_id ASC")
+            ->select()->toArray();
+
+        foreach ($zone_p1 as &$value){
+            $zone_p2  = Db::name('zone')->where('z_pid',$value['z_id'])->select()->toArray();
+
+            foreach ($zone_p2 as &$value2){
+                $zone_p3  = Db::name('zone')->where('z_pid',$value2['z_id'])->select()->toArray();
+                $value2['child_values'] = $zone_p3;
+            }
+
+            $value['child_values'] = $zone_p2;
+        }
+
+        return $zone_p1;
+    }
 }
