@@ -39,20 +39,9 @@
         <div class="row">
             <div class="col-md-9">
                 <table class="table table-bordered">
+
                     <tr>
-                        <th width="100">分类<span class="form-required">*</span></th>
-                        <td>
-                            <input class="form-control" type="text" style="width:400px;" required
-                                   value="{:implode(' ',$post_categories)}"
-                                   placeholder="请选择分类" onclick="doSelectCategory();" id="js-categories-name-input"
-                                   readonly/>
-                            <input class="form-control" type="hidden" value="{$post_category_ids}"
-                                   name="post[categories]"
-                                   id="js-categories-id-input"/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>标题<span class="form-required">*</span></th>
+                        <th width="100">标题<span class="form-required">*</span></th>
                         <td>
                             <input id="post-id" type="hidden" name="post[id]" value="{$post.id}">
                             <input class="form-control" type="text" name="post[post_title]"
