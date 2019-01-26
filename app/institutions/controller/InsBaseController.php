@@ -10,6 +10,7 @@
 // +----------------------------------------------------------------------
 namespace app\institutions\controller;
 
+use cmf\controller\BaseController;
 use think\Db;
 
 class InsBaseController extends BaseController
