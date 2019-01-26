@@ -20,7 +20,6 @@ class ArticleController extends HomeBaseController
 {
     public function index()
     {
-
         $portalCategoryModel = new PortalCategoryModel();
         $postService         = new PostService();
 
@@ -31,7 +30,8 @@ class ArticleController extends HomeBaseController
         if (empty($article)) {
             abort(404, '文章不存在!');
         }
-
+        return  json_encode($article);
+        die;
 
         $prevArticle = $postService->publishedPrevArticle($articleId, $categoryId);
         $nextArticle = $postService->publishedNextArticle($articleId, $categoryId);

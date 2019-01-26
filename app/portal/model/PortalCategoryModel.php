@@ -11,6 +11,7 @@
 namespace app\portal\model;
 
 use app\admin\model\RouteModel;
+use think\Db;
 use think\Model;
 use tree\Tree;
 
