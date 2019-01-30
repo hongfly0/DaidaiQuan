@@ -59,6 +59,10 @@ class FinancialController extends AdminBaseController
         //检查手机是否已被占用
         $check_is_exit = Db::name('institutions')->where('ins_mobile',$data['ins_mobile'])->count();
 
+        if($check_is_exit){
+            return $this->apifailed('手机号码已被占用');
+        }
+
         $data['ins_login_passwod'] = cmf_password($data['ins_login_passwod']);
         $data['create_at'] = date('Y-m-d H:i:s');
         $data['create_at'] = date('Y-m-d H:i:s');
