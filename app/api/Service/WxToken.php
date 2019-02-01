@@ -63,6 +63,7 @@ class WxToken extends Token {
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ]);
+            $user = MemberModel::where('openid', $openid)->find();
         } else {
             $uid = $user->member_id;
         }
