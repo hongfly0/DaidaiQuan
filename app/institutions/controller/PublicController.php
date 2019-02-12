@@ -117,8 +117,9 @@ class PublicController extends InsBaseController
      */
     public function logout()
     {
-        session('ADMIN_ID', null);
-        return redirect(url('/', [], false, true));
+        session('INS_ID', null);
+        session('name', null);
+        return redirect('http://www.daidaiquan.cn/#/index');
     }
 
 

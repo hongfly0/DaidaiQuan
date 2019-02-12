@@ -16,6 +16,7 @@ class IndexController extends HomeBaseController
 {
     public function index()
     {
-        return $this->fetch(':index');
+        return redirect('http://www.daidaiquan.cn/#/index');
+        //return $this->fetch(':index');
     }
 }

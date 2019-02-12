@@ -117,8 +117,18 @@
                         echo $status_mapping[$vo['product_status']];
                     </php>
                 </td>
-                <td><a href="javascript:void(0)" class="change_num" data-product_id="{$vo.product_id}" data-value="{$vo.view_num}" data-type="view_num">{$vo.view_num}</a></td>
-                <td><a href="javascript:void(0)" class="change_num" data-product_id="{$vo.product_id}" data-value="{$vo.collect_num}" data-type="collect_num">{$vo.collect_num}</a></td>
+                <td>
+
+                    <a href="javascript:void(0)" class="change_num" data-product_id="{$vo.product_id}" data-value="{$vo.view_num}" data-type="view_num">{$vo.view_num}</a>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="/Admin/goods/show_view_list?product_id={$vo.product_id}">查看</a>
+                </td>
+                <td>
+
+                    <a href="javascript:void(0)" class="change_num" data-product_id="{$vo.product_id}" data-value="{$vo.collect_num}" data-type="collect_num">{$vo.collect_num}</a>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="/Admin/goods/show_collect_list?product_id={$vo.product_id}">查看</a>
+                </td>
                 <td>{$vo.ins_name}</td>
                 <td>{$vo.ins_mobile}</td>
                 <td>

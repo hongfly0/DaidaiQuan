@@ -648,4 +648,46 @@ class GoodsController extends AdminBaseController{
             return $this->apifailed('更新失败');
         }
     }
+
+    public function show_view_list(){
+        $product_id = $this->request->param('product_id');
+
+        $users = Db::name('view_list')->alias('v')
+            ->join('ddq_member m','m.member_id = v.member_id')
+            ->where(array('v.product_id'=>$product_id))
+            ->order("v.create_at DESC")
+            ->paginate(10,false,[
+                'type'     => 'Bootstrap',
+                'var_page' => 'page',
+                'query' => ['product_id'=>$product_id]
+            ]);
+
+        // 获取分页显示
+        $page = $users->render();
+
+        $this->assign("page", $page);
+        $this->assign("users", $users);
+        return $this->fetch();
+    }
+
+    public function show_collect_list(){
+        $product_id = $this->request->param('product_id');
+
+        $users = Db::name('collect_list')->alias('v')
+            ->join('ddq_member m','m.member_id = v.member_id')
+            ->where(array('v.product_id'=>$product_id))
+            ->order("v.create_at DESC")
+            ->paginate(10,false,[
+                'type'     => 'Bootstrap',
+                'var_page' => 'page',
+                'query' => ['product_id'=>$product_id]
+            ]);
+
+        // 获取分页显示
+        $page = $users->render();
+
+        $this->assign("page", $page);
+        $this->assign("users", $users);
+        return $this->fetch();
+    }
 }
