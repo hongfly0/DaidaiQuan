@@ -570,6 +570,35 @@ class GoodsController extends AdminBaseController{
         $product_query = Db::name('product_query')->where('product_id',$product_id)->select()->toArray();
 
         $this->assign('product',$product_info);
+
+
+        $info = Db::name('product')->where('product_id',$product_id)->find();
+
+        $product_type = Db::name('query_type')->field('qt_id,qt_en_name,qt_name')->select()->toArray();
+
+        $product_query = Db::name('product_query')->where('product_id',$product_id)->select()->toArray();
+
+        foreach ($product_type as &$value){
+            $value['query_values'] = array();
+            foreach ($product_query as $row){
+                if($value['qt_id'] == $row['pt_id']){
+                    $value['query_values'][] = array('pv_id'=>$row['pv_id'],'pv_value'=>$row['pv_value']);
+                }
+            }
+        }
+
+        $info['product_query'] = $product_type;
+
+        //获取地区字符
+        $zone = Db::name('zone')->whereIn('z_id',$info['use_zone_ids'])->field('z_name')->select()->toArray();
+
+        $info['use_zone_title'] = '';
+        if($zone){
+            $info['use_zone_title'] = implode(',',array_column($zone,'z_name'));
+        }
+
+        $this->assign("info", $info);
+
         $this->assign('product_query',json_encode($product_query));
         $this->assign("types", $new_types);
 

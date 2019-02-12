@@ -92,7 +92,85 @@
                     <div class="tab-pane active" >
                         <div class="form-group">
                             <div class="col-md-8 col-sm-12" style="padding: 9px;margin-left: 12%;border: 1px solid #eaeaea">
-                                {$product.product_detail}
+                                <div class="tabbable"  class="layui-form" lay-filter="from_layui" style="width: 80%;margin-left: 10%">
+                                    <center><div style="font-size: 20px;font-weight: 600">{$info.product_name}</div></center>
+
+                                    <div class="boxa" style="width: 100%;height: 30px;">
+                                        <div class="boxa-l" style="width: 50%; float: left;">
+                                            发布时间:&nbsp;&nbsp;{$info.create_at}
+                                        </div>
+                                        <div class="boxa-r" style="width: 50%;float: left;text-align: right">
+                                            产品编号:&nbsp;&nbsp;{$info.product_no}
+                                        </div>
+                                    </div>
+
+                                    <div class="boxa" style="width: 100%;height: 30px;">
+                                        <div class="boxa-l" style="width: 50%; float: left;">
+                                            所属单位:&nbsp;&nbsp;{$info.company_name}
+                                        </div>
+                                    </div>
+                                    <div class="boxa" style="width: 100%;height: 30px;">
+                                        <div class="boxa-l" style="width: 50%; float: left;">
+                                            服务类型:&nbsp;&nbsp;{$info.service_object}
+                                        </div>
+                                        <div class="boxa-r" style="width: 50%;float: left;">
+                                            贷款金额:&nbsp;&nbsp;{$info.loan_amount}
+                                        </div>
+                                    </div>
+                                    <div class="boxa" style="width: 100%;height: 30px;">
+                                        <div class="boxa-l" style="width: 50%; float: left;">
+                                            贷款对象:&nbsp;&nbsp;{$info.loan_object}
+                                        </div>
+                                        <div class="boxa-r" style="width: 50%;float: left;">
+                                            贷款用途:&nbsp;&nbsp;{$info.loan_use_dor}
+                                        </div>
+                                    </div>
+                                    <div class="boxa" style="width: 100%;height: 30px;">
+                                        <div class="boxa-l" style="width: 50%; float: left;">
+                                            贷款年限:&nbsp;&nbsp;{$info.loan_time_limit} 年
+                                        </div>
+                                        <div class="boxa-r" style="width: 50%;float: left;">
+                                            担保方式:&nbsp;&nbsp;{$info.assure_means}
+                                        </div>
+                                    </div>
+                                    <div class="boxa" style="width: 100%;height: 30px;">
+                                        <div class="boxa-l" style="width: 50%; float: left;">
+                                            利    率:&nbsp;&nbsp;{$info.interest_rate} 厘
+                                        </div>
+                                        <div class="boxa-r" style="width: 50%;float: left;">
+                                            手续费:&nbsp;&nbsp;{$info.poundage}%
+                                        </div>
+                                    </div>
+                                    <div class="boxa" style="width: 100%;height: 30px;">
+                                        <div class="boxa-l" style="width: 50%; float: left;">
+                                            审核周期:&nbsp;&nbsp;{$info.audit_cycle} 天
+                                        </div>
+                                        <div class="boxa-r" style="width: 50%;float: left;">
+                                            适用地区:&nbsp;&nbsp;{$info.use_zone_title}
+                                        </div>
+                                    </div>
+                                    <div class="boxa" style="width: 100%;height: 30px;">
+                                        <div class="boxa-r" style="width: 50%;float: left;">
+                                            联系方式:&nbsp;&nbsp;{$info.product_contact}
+                                        </div>
+                                        <div class="boxa-r" style="width: 50%;float: left;">
+                                            外部链接:&nbsp;&nbsp;{$info.outside_url}
+                                        </div>
+                                    </div>
+                                    <foreach name="$info.product_query" item="vo" key="key">
+                                        <div class="boxa" style="width: 100%;height: 30px;">
+                                            <div class="boxa-r" style="width: 50%;float: left;">
+                                                {$vo.qt_name}:&nbsp;&nbsp;
+                                                <foreach name="$vo.query_values" item="vo2" key="key2">
+                                                    {$vo2.pv_value} &nbsp;&nbsp;
+                                                </foreach>
+                                            </div>
+                                        </div>
+                                    </foreach>
+                                    <div class="boxb" style="width: 100%;padding: 10px">
+                                        {$info.product_detail}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
